@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação do Processo de Importação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        pre {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        p {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Automação do Processo de Importação</h1>
+    <p>
+        A partir de um banco de dados criado para a atividade, é realizado o processo de criação automática da estrutura com as tabelas 'produtos', 'NCM' e 'vendas'. Tais tabelas deverão receber os dados constantes dos respectivos arquivos .csv. A cada execução do processo, as tabelas são excluídas e recriadas.
+    </p>
+    <pre>
+-- colocando em uso o banco aula
+USE aula;
+
+-- apagando produtos se existir
+DROP TABLE IF EXISTS produtos;
+
+-- criando a tabela produtos
+CREATE TABLE produtos (
+    idproduto INT,
+    descricao VARCHAR(255),
+    unidade CHAR(255),
+    ncm VARCHAR(255)
+);
+
+-- apagando NCM se existir
+DROP TABLE IF EXISTS NCM;
+
+-- criando a tabela NCM
+CREATE TABLE NCM (
+    NCM CHAR(MAX),
+    lixo1 VARCHAR(MAX),
+    descricao VARCHAR(MAX),
+    lixo2 VARCHAR(MAX)
+);
+
+-- excluindo vendas se existir
+DROP TABLE IF EXISTS vendas;
+
+-- criando vendas
+CREATE TABLE vendas (
+    data DATE,
+    produto VARCHAR(255),
+    quantidade VARCHAR(255),
+    total VARCHAR(255)
+);
+    </pre>
+</body>
+</html>

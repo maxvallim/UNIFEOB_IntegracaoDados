@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automação do Processo de Importação e Transformação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        pre {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        p {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Automação do Processo de Importação e Transformação</h1>
+    <p>
+        Processo de importação e transformação, utilizando padrão SQL para SQL Server.
+    </p>
+    <pre>
+-- colocando em uso o banco aula
+USE nomebancodedados;
+
+-- apagando produtos se existir
+DROP TABLE IF EXISTS produtos;
+
+-- criando a tabela produtos
+CREATE TABLE produtos (
+    idproduto INT,
+    descricao VARCHAR(255),
+    unidade CHAR(255),
+    ncm VARCHAR(255)
+);
+
+-- apagando NCM se existir
+DROP TABLE IF EXISTS NCM;
+
+-- criando a tabela NCM
+CREATE TABLE NCM (
+    NCM CHAR(255),
+    lixo1 VARCHAR(MAX),
+    descricao VARCHAR(MAX),
+    lixo2 VARCHAR(MAX)
+);
+
+-- excluindo vendas se existir
+DROP TABLE IF EXISTS vendas;
+
+-- criando vendas
+CREATE TABLE vendas (
+    data DATE,
+    produto VARCHAR(255),
+    quantidade VARCHAR(255),
+    total VARCHAR(255)
+);
+
+BULK INSERT produtos
+FROM 'C://caminho//produtos.csv'
+WITH (
+    FIRSTROW = 2,  -- Ignora a primeira linha (cabeçalho)
+    FIELDTERMINATOR = ';',  -- Delimitador de campo
+    ROWTERMINATOR = '\n',  -- Delimitador de linha
+    TABLOCK
+);
+
+BULK INSERT NCM
+FROM 'C://caminho//NCM.csv'
+WITH (
+    FIRSTROW = 2,  -- Ignora a primeira linha (cabeçalho)
+    FIELDTERMINATOR = ';',  -- Delimitador de campo
+    ROWTERMINATOR = '\n',  -- Delimitador de linha
+    TABLOCK
+);
+
+BULK INSERT vendas
+FROM 'C://caminho//vendas.csv'
+WITH (
+    FIRSTROW = 2,  -- Ignora a primeira linha (cabeçalho)
+    FIELDTERMINATOR = ';',  -- Delimitador de campo
+    ROWTERMINATOR = '\n',  -- Delimitador de linha
+    TABLOCK
+);
+
+-- ajustando NCM
+
+-- apagando colunas indesejadas
+ALTER TABLE NCM
+DROP COLUMN lixo1, lixo2;
+
+-- retirando os espacos em branco do NCM
+UPDATE NCM
+SET NCM = TRIM(NCM);
+
+-- retirando os pontos do NCM
+UPDATE NCM
+SET NCM = REPLACE(NCM, '.', '');
+
+-- transformando a descricao em UPPER
+UPDATE NCM
+SET descricao = UPPER(descricao);
+
+-- excluindo NCMGrupos se existir
+DROP TABLE IF EXISTS NCMGrupo;
+
+-- criando os grupos do NCM
+SELECT *
+INTO NCMGrupo
+FROM NCM
+WHERE LEN(ncm) = 4
+  AND LEFT(descricao, 1) <> '-'
+  AND descricao IS NOT NULL;
+
+-- excluindo do NCM campos indesejados (NCM diferente de 8 posições)
+DELETE FROM NCM
+WHERE LEN(ncm) <> 8;
+
+-- trocando , por .
+UPDATE vendas
+SET quantidade = REPLACE(quantidade, ',', '.'), total = REPLACE(total, ',', '.');
+
+-- alterando quantidade para DECIMAL
+ALTER TABLE vendas
+ALTER COLUMN quantidade DECIMAL(10, 3);
+
+-- alterando total para DECIMAL
+ALTER TABLE vendas
+ALTER COLUMN total DECIMAL(10, 2);
+    </pre>
+</body>
+</html>

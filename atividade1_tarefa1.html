@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificação dos procedimentos e importação e transformação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        ol {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        pre {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Identificação dos procedimentos e importação e transformação</h1>
+    <ol>
+        <li>Importar o arquivo produtos;</li>
+        <li>Importar o arquivo vendas (deixar importando...);</li>
+        <li>Acertar o campo e o nome da dataVenda;</li>
+        <li>Entender NCM;</li>
+        <li>Localizar tabela NCM.xls na Web;</li>
+        <li>Transformar em .csv e limpar sujeiras;</li>
+        <li>Importar NCM;</li>
+        <li>Acertar nome dos campos;</li>
+        <li>Transformar a descrição do NCM em maiúsculo;</li>
+        <li>Criar uma tabela para os grupos da NCM denominada gruposncm;</li>
+    </ol>
+    <pre>
+CREATE TABLE gruposncm AS
+SELECT *
+FROM ncm
+WHERE substr(ncm, 3, 1) = '.';
+    </pre>
+    <ol start="11">
+        <li>Retirar os . dos NCM
+            <pre>
+UPDATE sua_tabela
+SET seu_campo = REPLACE(seu_campo, '.', '');
+            </pre>
+        </li>
+        <li>Fazer uma consulta global e gerar um .csv;</li>
+    </ol>
+</body>
+</html>
