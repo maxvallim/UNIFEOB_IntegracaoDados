@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL Básico com SQL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>ETL Básico com SQL</h1>
+    <p>
+        O processo de ETL (Extract, Transform, Load) é uma prática fundamental na integração de dados e na construção de data warehouses. Ele envolve três etapas principais:
+    </p>
+    <p>
+        <strong>1. Extração (Extract):</strong> Nesta fase, os dados são coletados de diversas fontes, como bancos de dados, arquivos CSV, sistemas ERP, entre outros. A extração é crucial para garantir que todos os dados relevantes sejam capturados para análise posterior.
+    </p>
+    <p>
+        <strong>2. Transformação (Transform):</strong> Após a extração, os dados brutos são transformados para atender aos requisitos de negócios. Isso pode incluir a limpeza de dados, a padronização de formatos, a remoção de duplicatas e a aplicação de regras de negócios. A transformação garante que os dados estejam em um formato adequado para análise.
+    </p>
+    <p>
+        <strong>3. Carregamento (Load):</strong> Na última etapa, os dados transformados são carregados em um data warehouse ou outro sistema de destino. O carregamento pode ser feito de forma incremental ou em lote, dependendo das necessidades do negócio. Esta fase garante que os dados estejam disponíveis para análise e relatórios.
+    </p>
+    <p>
+        O processo de ETL é essencial para a criação de uma base de dados consolidada e confiável, permitindo que as organizações tomem decisões informadas com base em dados precisos e atualizados.
+    </p>
+    <p>
+        A atividade proposta utiliza como fonte de dados os arquivos <a href="produtos.csv">produtos</a>, <a href="NCM.csv">NCM</a> e <a href="vendas.csv">vendas</a>, todos no formato .csv. Esses arquivos são essenciais para o processo de ETL, pois fornecem os dados brutos que serão extraídos, transformados e carregados no sistema de destino.
+    </p>
+
+    <h2 id="tarefa1">Tarefa 1</h2>
+    <p><a href="atividade1_tarefa1.html">Análise e compreensão, identificando as etapas do projeto.</a></p>
+
+    <h2 id="tarefa2">Tarefa 2</h2>
+    <p><a href="atividade1_tarefa2.html">Criação da rotina de importação, com a geração da estrutura de dados.</a></p>
+
+    <h2 id="tarefa3">Tarefa 3</h2>
+    <p><a href="atividade1_tarefa3.html">Processo de importação e Transformação.</a></p>
+</body>
+</html>

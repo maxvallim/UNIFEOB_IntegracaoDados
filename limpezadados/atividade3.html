@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade Avaliada: Limpeza de Dados em MySQL</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       7f3ff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Atividade Avaliada: Limpeza de Dados em MySQL</h1>
+    <p>Esta atividade avaliada tem como objetivo praticar a limpeza de dados em MySQL. Você deverá criar scripts de limpeza para as três tabelas fornecidas abaixo.</p>
+
+    <h2>Criação das Tabelas e Inserção de Dados</h2>
+    <pre>
+CREATE DATABASE atividade_limpeza;
+USE atividade_limpeza;
+
+CREATE TABLE alunos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    telefone VARCHAR(20),
+    endereco VARCHAR(200)
+);
+
+CREATE TABLE cursos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    descricao TEXT,
+    duracao INT
+);
+
+CREATE TABLE matriculas (
+    id INT PRIMARY KEY,
+    aluno_id INT,
+    curso_id INT,
+    data_matricula VARCHAR(20),
+    FOREIGN KEY (aluno_id) REFERENCES alunos(id),
+    FOREIGN KEY (curso_id) REFERENCES cursos(id)
+);
+
+INSERT INTO alunos VALUES
+(1, '  Ana Paula  ', 'ana.paula@example.com', '(11) 99999-9999', 'Rua A, 123'),
+(2, 'Bruno Silva', 'bruno.silva@example.com', NULL, 'Rua B, 456'),
+(3, 'Carla Souza', 'carla.souza@example.com', '(21) 88888-8888', 'Rua C, 789'),
+(4, NULL, 'david.lima@example.com', '(31) 77777-7777', 'Rua D, 101'),
+(5, 'Eduardo Oliveira', 'eduardo.oliveira@example.com', '(41) 66666-6666', NULL),
+(6, 'Fernanda Costa', 'fernanda.costa@example.com', '(51) 55555-5555', 'Rua E, 202'),
+(7, 'Gabriel Santos', 'gabriel.santos@example.com', '(61) 44444-4444', 'Rua F, 303'),
+(8, 'Helena Almeida', 'helena.almeida@example.com', '(71) 33333-3333', 'Rua G, 404'),
+(9, 'Igor Martins', 'igor.martins@example.com', '(81) 22222-2222', 'Rua H, 505'),
+(10, 'Juliana Ferreira', 'juliana.ferreira@example.com', NULL, 'Rua I, 606');
+
+INSERT INTO cursos VALUES
+(1, 'Matemática', 'Curso de Matemática Básica', 40),
+(2, 'Português', 'Curso de Português Avançado', -30),
+(3, 'História', NULL, 50),
+(4, 'Geografia', 'Curso de Geografia', 45),
+(5, NULL, 'Curso de Ciências', 35),
+(6, 'Física', 'Curso de Física', 60),
+(7, 'Química', 'Curso de Química', 55),
+(8, 'Biologia', 'Curso de Biologia', 50),
+(9, 'Filosofia', 'Curso de Filosofia', 40),
+(10, 'Sociologia', 'Curso de Sociologia', 45);
+
+INSERT INTO matriculas VALUES
+(1, 1, 1, '15/03/2024'),
+(2, 2, 2, '2024-03-14'),
+(3, 3, 3, '14-03-2024'),
+(4, 1, 4, '15/03/2024'),
+(5, 4, 5, '2024-03-13'),
+(6, 5, 6, '2024/03/12'),
+(7, 6, 7, '13/03/2024'),
+(8, 7, 8, '2024-03-11'),
+(9, 8, 9, '11-03-2024'),
+(10, 9, 10, '2024-03-10');
+    </pre>
+
+    
+</body>
+</html>

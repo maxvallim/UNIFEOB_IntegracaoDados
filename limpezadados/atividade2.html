@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Prático de Limpeza de Dados em MySQL</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        code {
+            background-color: #e7f3ff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exemplo Prático de Limpeza de Dados em MySQL</h1>
+    <p>Este estudo de caso demonstra como realizar a limpeza de dados em duas tabelas MySQL. Vamos começar com a criação das tabelas e a inserção de dados, e depois aplicar várias técnicas de limpeza de dados.</p>
+
+    <h2>Criação das Tabelas e Inserção de Dados</h2>
+    <pre>
+CREATE DATABASE exemplo_limpeza;
+USE exemplo_limpeza;
+
+CREATE TABLE clientes (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    email VARCHAR(100),
+    telefone VARCHAR(20),
+    endereco VARCHAR(200)
+);
+
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY,
+    cliente_id INT,
+    produto VARCHAR(100),
+    quantidade INT,
+    preco DECIMAL(10,2),
+    data_pedido VARCHAR(20),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+INSERT INTO clientes VALUES
+(1, '  João Silva  ', 'joao.silva@example.com', '(11) 99999-9999', 'Rua A, 123'),
+(2, 'Maria Souza', 'maria.souza@example.com', NULL, 'Rua B, 456'),
+(3, 'Carlos Pereira', 'carlos.pereira@example.com', '(21) 88888-8888', 'Rua C, 789'),
+(4, NULL, 'ana.lima@example.com', '(31) 77777-7777', 'Rua D, 101'),
+(5, 'Paulo Oliveira', 'paulo.oliveira@example.com', '(41) 66666-6666', NULL);
+
+INSERT INTO pedidos VALUES
+(1, 1, 'Notebook', 1, 3000.00, '15/03/2024'),
+(2, 2, 'Tablet', -2, 1500.00, '2024-03-14'),
+(3, 3, 'Smartphone', 1, NULL, '14-03-2024'),
+(4, 1, 'Mouse', 2, 100.00, '15/03/2024'),
+(5, 4, 'Teclado', 1, 200.00, '2024-03-13');
+    </pre>
+
+    <h2>Limpeza de Dados</h2>
+    <p>A seguir, aplicamos várias técnicas de limpeza de dados para garantir a consistência e a integridade dos dados.</p>
+
+    <h3>Remover Espaços em Branco</h3>
+    <pre>
+UPDATE clientes
+SET nome = TRIM(nome);
+    </pre>
+
+    <h3>Padronizar Formato de Data</h3>
+    <pre>
+UPDATE pedidos
+SET data_pedido = DATE_FORMAT(STR_TO_DATE(data_pedido, '%d-%m-%Y'), '%d/%m/%Y')
+WHERE data_pedido REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$';
+
+UPDATE pedidos
+SET data_pedido = DATE_FORMAT(STR_TO_DATE(data_pedido, '%Y-%m-%d'), '%d/%m/%Y')
+WHERE data_pedido REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$';
+
+UPDATE pedidos
+SET data_pedido = DATE_FORMAT(STR_TO_DATE(data_pedido, '%d/%m/%Y'), '%d/%m/%Y')
+WHERE data_pedido REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$';
+    </pre>
+
+    <h3>Corrigir Quantidades Negativas</h3>
+    <pre>
+UPDATE pedidos
+SET quantidade = ABS(quantidade)
+WHERE quantidade < 0;
+    </pre>
+
+    <h3>Definir Valores Nulos</h3>
+    <pre>
+UPDATE pedidos
+SET preco = 0.00
+WHERE preco IS NULL;
+
+UPDATE clientes
+SET nome = 'Nome Desconhecido'
+WHERE nome IS NULL;
+
+UPDATE clientes
+SET telefone = 'Telefone Não Informado'
+WHERE telefone IS NULL;
+
+UPDATE clientes
+SET endereco = 'Endereço Não Informado'
+WHERE endereco IS NULL;
+    </pre>
+
+    <h3>Excluir Linhas com Todos os Campos Nulos</h3>
+    <pre>
+DELETE FROM clientes
+WHERE id IS NULL
+  AND nome IS NULL
+  AND email IS NULL
+  AND telefone IS NULL
+  AND endereco IS NULL;
+
+DELETE FROM pedidos
+WHERE id IS NULL
+  AND cliente_id IS NULL
+  AND produto IS NULL
+  AND quantidade IS NULL
+  AND preco IS NULL
+  AND data_pedido IS NULL;
+    </pre>
+
+    <p>Com esses passos, garantimos que os dados nas tabelas <code>clientes</code> e <code>pedidos</code> estejam limpos e consistentes, prontos para serem utilizados em análises e relatórios.</p>
+</body>
+</html>

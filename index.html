@@ -3,26 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETL Básico com SQL</title>
+    <title>Unidade de Estudos: Integração de Dados</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
-        }
-        h1 {
             color: #333;
-            text-align: center;
         }
-        p {
-            background: #fff;
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
             padding: 20px;
-            border-radius: 8px;
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+       ;
+        }
+        li {
+            margin-bottom: 10px;
         }
         a {
-            color: #1a73e8;
+            color: #0056b3;
             text-decoration: none;
         }
         a:hover {
@@ -31,33 +36,15 @@
     </style>
 </head>
 <body>
-    <h1>ETL Básico com SQL</h1>
-    <p>
-        O processo de ETL (Extract, Transform, Load) é uma prática fundamental na integração de dados e na construção de data warehouses. Ele envolve três etapas principais:
-    </p>
-    <p>
-        <strong>1. Extração (Extract):</strong> Nesta fase, os dados são coletados de diversas fontes, como bancos de dados, arquivos CSV, sistemas ERP, entre outros. A extração é crucial para garantir que todos os dados relevantes sejam capturados para análise posterior.
-    </p>
-    <p>
-        <strong>2. Transformação (Transform):</strong> Após a extração, os dados brutos são transformados para atender aos requisitos de negócios. Isso pode incluir a limpeza de dados, a padronização de formatos, a remoção de duplicatas e a aplicação de regras de negócios. A transformação garante que os dados estejam em um formato adequado para análise.
-    </p>
-    <p>
-        <strong>3. Carregamento (Load):</strong> Na última etapa, os dados transformados são carregados em um data warehouse ou outro sistema de destino. O carregamento pode ser feito de forma incremental ou em lote, dependendo das necessidades do negócio. Esta fase garante que os dados estejam disponíveis para análise e relatórios.
-    </p>
-    <p>
-        O processo de ETL é essencial para a criação de uma base de dados consolidada e confiável, permitindo que as organizações tomem decisões informadas com base em dados precisos e atualizados.
-    </p>
-    <p>
-        A atividade proposta utiliza como fonte de dados os arquivos <a href="produtos.csv">produtos</a>, <a href="NCM.csv">NCM</a> e <a href="vendas.csv">vendas</a>, todos no formato .csv. Esses arquivos são essenciais para o processo de ETL, pois fornecem os dados brutos que serão extraídos, transformados e carregados no sistema de destino.
-    </p>
-
-    <h2 id="tarefa1">Tarefa 1</h2>
-    <p><a href="atividade1_tarefa1.html">Análise e compreensão, identificando as etapas do projeto.</a></p>
-
-    <h2 id="tarefa2">Tarefa 2</h2>
-    <p><a href="atividade1_tarefa2.html">Criação da rotina de importação, com a geração da estrutura de dados.</a></p>
-
-    <h2 id="tarefa3">Tarefa 3</h2>
-    <p><a href="atividade1_tarefa3.html">Processo de importação e Transformação.</a></p>
+    <div class="container">
+        <h1>Unidade de Estudos: Integração de Dados</h1>
+        <p>A unidade de estudos "Integração de Dados" é fundamental para entender como combinar dados de diferentes fontes em um único repositório coeso. Este processo é essencial para análises, relatórios e tomada de decisões informadas. A integração de dados permite que as organizações obtenham uma visão holística de suas operações, melhorando a qualidade dos dados e a eficiência dos processos.</p>
+        <p>Com a crescente quantidade de dados gerados diariamente, a habilidade de integrar e limpar esses dados se torna cada vez mais crucial. A limpeza de dados garante que os dados integrados sejam precisos, consistentes e utilizáveis, evitando erros e duplicatas que podem distorcer análises e decisões.</p>
+        <p>Esta unidade de estudos abordará conceitos básicos de ETL (Extração, Transformação e Carga) e técnicas de limpeza de dados, proporcionando uma base sólida para qualquer profissional que trabalhe com dados.</p>
+        <ul>
+            <li><a href="etl_basico.html">ETL Básico</a></li>
+            <li><a href="limpeza_de_dados.html">Limpeza de Dados</a></li>
+        </ul>
+    </div>
 </body>
 </html>

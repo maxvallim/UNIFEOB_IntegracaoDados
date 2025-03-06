@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Prático de Limpeza de Dados em MySQL</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       : #e7f3ff;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exemplo Prático de Limpeza de Dados em MySQL</h1>
+    <p>Este estudo de caso demonstra como realizar a limpeza de dados em uma tabela MySQL. Vamos começar com a criação da tabela e a inserção de dados, e depois aplicar várias técnicas de limpeza de dados.</p>
+
+    <h2>Criação da Tabela e Inserção de Dados</h2>
+    <pre>
+CREATE DATABASE teste2;
+USE teste2;
+
+CREATE TABLE vendas (
+    id INT PRIMARY KEY,
+    produto VARCHAR(100),
+    quantidade INT,
+    preco DECIMAL(10,2),
+    data_venda VARCHAR(20),
+    categoria VARCHAR(50),
+    regiao VARCHAR(30)
+);
+
+INSERT INTO vendas VALUES
+(1, '  Celular X9  ', 2, 1500.00, '15/03/2024', 'eletronicos', 'Sudeste'),
+(2, 'Tablet Pro', -3, 899.90, '2024-03-14', 'ELETRÔNICOS', 'Sul'),
+(3, 'Fone Bluetooth', 1, NULL, '14-03-2024', 'acessorios', 'nordeste'),
+(4, 'Celular X9', 2, 1500.00, '15/03/2024', 'eletronicos', 'SUDESTE'),
+(5, NULL, 5, 49.90, '2024-03-13', 'vestuario', NULL);
+
+SELECT * FROM vendas;
+    </pre>
+
+    <h2>Limpeza de Dados</h2>
+    <p>A seguir, aplicamos várias técnicas de limpeza de dados para garantir a consistência e a integridade dos dados.</p>
+
+    <h3>Remover Espaços em Branco</h3>
+    <pre>
+UPDATE vendas
+SET produto = TRIM(produto);
+    </pre>
+
+    <h3>Padronizar Categorias e Regiões</h3>
+    <pre>
+UPDATE vendas
+SET categoria = LOWER(categoria),
+    regiao = LOWER(regiao);
+    </pre>
+
+    <h3>Corrigir Quantidades Negativas</h3>
+    <pre>
+UPDATE vendas
+SET quantidade = 0
+WHERE quantidade < 0;
+    </pre>
+
+    <h3>Definir Valores Nulos</h3>
+    <pre>
+UPDATE vendas
+SET preco = 0.00
+WHERE preco IS NULL;
+
+UPDATE vendas
+SET produto = 'Produto Desconhecido'
+WHERE produto IS NULL;
+
+UPDATE vendas
+SET regiao = 'nao informada'
+WHERE regiao IS NULL;
+    </pre>
+
+    <h3>Padronizar Formato de Data</h3>
+    <pre>
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%d-%m-%Y'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$';
+
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%Y-%m-%d'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$';
+
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%d/%m/%Y'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$';
+    </pre>
+
+    <h3>Substituir Caracteres Acentuados</h3>
+    <pre>
+UPDATE vendas SET categoria = REPLACE(categoria, 'á', 'a');
+UPDATE vendas SET categoria = REPLACE(categoria, 'é', 'e');
+UPDATE vendas SET categoria = REPLACE(categoria, 'í', 'i');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ó', 'o');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ú', 'u');
+UPDATE vendas SET categoria = REPLACE(categoria, 'â', 'a');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ê', 'e');
+UPDATE vendas SET categoria = REPLACE(categoria, 'î', 'i');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ô', 'o');
+UPDATE vendas SET categoria = REPLACE(categoria, 'û', 'u');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ã', 'a');
+UPDATE vendas SET categoria = REPLACE(categoria, 'õ', 'o');
+UPDATE vendas SET categoria = REPLACE(categoria, 'ç', 'c');
+    </pre>
+
+    <h3>Excluir Linhas com Todos os Campos Nulos</h3>
+    <pre>
+DELETE FROM vendas
+WHERE id IS NULL
+  AND produto IS NULL
+  AND quantidade IS NULL
+  AND preco IS NULL
+  AND data_venda IS NULL
+  AND categoria IS NULL
+  AND regiao IS NULL;
+    </pre>
+
+    <h2>Explicação Detalhada da Padronização das Datas</h2>
+    <p>Para padronizar as datas no formato <code>dd/mm/aaaa</code> no MySQL, seguimos os passos abaixo:</p>
+
+    <h3>1. Identificar Formatos de Data Existentes</h3>
+    <p>Primeiro, identificamos os diferentes formatos de data que estão sendo usados na tabela:</p>
+    <ul>
+        <li><code>dd-mm-aaaa</code></li>
+        <li><code>aaaa-mm-dd</code></li>
+        <li><code>dd/mm/aaaa</code></li>
+    </ul>
+
+    <h3>2. Converter Datas no Formato <code>dd-mm-aaaa</code> para <code>dd/mm/aaaa</code></h3>
+    <pre>
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%d-%m-%Y'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{2}-[0-9]{2}-[0-9]{4}$';
+    </pre>
+    <p>Usamos a função <code>STR_TO_DATE</code> para converter a string de data para um formato de data reconhecido pelo MySQL e, em seguida, a função <code>DATE_FORMAT</code> para formatar a data no formato desejado.</p>
+
+    <h3>3. Converter Datas no Formato <code>aaaa-mm-dd</code> para <code>dd/mm/aaaa</code></h3>
+    <pre>
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%Y-%m-%d'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$';
+    </pre>
+    <p>Similar ao passo anterior, mas para datas no formato <code>aaaa-mm-dd</code>.</p>
+
+    <h3>4. Garantir Consistência para Datas no Formato <code>dd/mm/aaaa</code></h3>
+    <pre>
+UPDATE vendas
+SET data_venda = DATE_FORMAT(STR_TO_DATE(data_venda, '%d/%m/%Y'), '%d/%m/%Y')
+WHERE data_venda REGEXP '^[0-9]{2}/[0-9]{2}/[0-9]{4}$';
+    </pre>
+    <p>Para garantir que todas as datas no formato <code>dd/mm/aaaa</code> estejam consistentes, aplicamos a formatação novamente.</p>
+
+

@@ -1,0 +1,123 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpeza de Dados na Integração de Dados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        h1 {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+        }
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #e7f3ff;
+            padding: 10px;
+            border-left: 4px solid #0056b3;
+        }
+        .activities {
+            margin-top: 20px;
+        }
+        .activities a {
+            display: block;
+            margin-bottom: 10px;
+            color: #0056b3;
+            text-decoration: none;
+        }
+        .activities a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contextualização da Limpeza de Dados em um Processo de Integração de Dados</h1>
+        <p>A integração de dados é o processo de combinar dados de diferentes fontes em um único repositório coeso, que pode ser utilizado para análises, relatórios e tomada de decisões. Durante esse processo, a limpeza de dados desempenha um papel crucial para garantir que os dados integrados sejam precisos, consistentes e utilizáveis.</p>
+
+        <h2>Importância da Limpeza de Dados na Integração</h2>
+        <ul>
+            <li><strong>Qualidade dos Dados</strong>: Dados provenientes de diferentes fontes podem ter formatos variados, erros, duplicatas e valores ausentes. A limpeza de dados ajuda a padronizar e corrigir essas inconsistências, melhorando a qualidade geral dos dados integrados.</li>
+            <li><strong>Consistência</strong>: Ao integrar dados de múltiplas fontes, é essencial garantir que os dados sejam consistentes. Por exemplo, diferentes sistemas podem usar diferentes formatos de data ou unidades de medida. A limpeza de dados normaliza esses formatos, garantindo que todos os dados estejam alinhados.</li>
+            <li><strong>Precisão</strong>: Dados limpos são mais precisos, o que é fundamental para análises confiáveis. Erros e duplicatas podem distorcer os resultados das análises, levando a conclusões incorretas. A limpeza de dados elimina essas imperfeições, proporcionando uma base de dados precisa.</li>
+            <li><strong>Eficiência</strong>: A limpeza de dados antes da integração reduz o tempo e o esforço necessários para corrigir problemas posteriormente. Isso torna o processo de integração mais eficiente e menos propenso a erros.</li>
+        </ul>
+
+        <h2>Exemplos Práticos na Integração de Dados</h2>
+        <ol>
+            <li><strong>Remoção de Duplicatas</strong>:
+                <ul>
+                    <li><strong>Exemplo</strong>: Ao integrar dados de clientes de diferentes sistemas de CRM, pode haver registros duplicados para o mesmo cliente. A remoção de duplicatas garante que cada cliente seja representado apenas uma vez no banco de dados integrado.</li>
+                </ul>
+            </li>
+            <li><strong>Correção de Erros</strong>:
+                <ul>
+                    <li><strong>Exemplo</strong>: Se um sistema armazena datas no formato "DD/MM/AAAA" e outro no formato "AAAA-MM-DD", a correção de erros padroniza todas as datas para um único formato, facilitando a análise.</li>
+                </ul>
+            </li>
+            <li><strong>Preenchimento de Valores Ausentes</strong>:
+                <ul>
+                    <li><strong>Exemplo</strong>: Durante a integração de dados de vendas, alguns registros podem ter campos de valor ausentes. Preencher esses valores com a média ou um valor padrão garante que os dados estejam completos.</li>
+                </ul>
+            </li>
+            <li><strong>Normalização</strong>:
+                <ul>
+                    <li><strong>Exemplo</strong>: Se os preços dos produtos estão em diferentes moedas, a normalização converte todos os preços para uma única moeda, como o Real (BRL), para facilitar a comparação e análise.</li>
+                </ul>
+            </li>
+            <li><strong>Filtragem de Dados Irrelevantes</strong>:
+                <ul>
+                    <li><strong>Exemplo</strong>: Ao integrar dados históricos de vendas, pode ser útil remover registros de anos que não são relevantes para a análise atual, focando apenas nos dados mais recentes.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Ferramentas e Técnicas</h2>
+        <ul>
+            <li><strong>Ferramentas de software</strong>: Excel, OpenRefine, e linguagens de programação como Python (usando bibliotecas como Pandas) são comumente usadas para a limpeza de dados.</li>
+            <li><strong>Técnicas de automação</strong>: Scripts e algoritmos podem ser desenvolvidos para automatizar a limpeza de grandes volumes de dados, economizando tempo e reduzindo erros humanos.</li>
+        </ul>
+
+        <h2>Benefícios da Limpeza de Dados na Integração</h2>
+        <ul>
+            <li><strong>Precisão</strong>: Dados limpos são mais precisos, levando a análises mais confiáveis.</li>
+            <li><strong>Eficiência</strong>: Reduz o tempo gasto na correção de erros durante a análise.</li>
+            <li><strong>Decisões informadas</strong>: Dados de alta qualidade permitem tomar decisões mais bem informadas e estratégicas.</li>
+        </ul>
+
+        <p class="highlight">A limpeza de dados é essencial para qualquer projeto de integração de dados, garantindo que os dados combinados sejam de alta qualidade e prontos para uso. Se precisar de mais detalhes ou tiver alguma dúvida específica, estou aqui para ajudar!</p>
+
+        <div class="activities">
+            <a href="atividade1.html">Atividade 1</a>
+            <a href="atividade2.html">Atividade 2</a>
+            <a href="atividade3.html">Atividade 3</a>
+        </div>
+    </div>
+</body>
+</html>
