@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios SQL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Exercício 1: Subconsulta Correlacionada</h2>
+    <pre><code>
+-- Criação da tabela produtos
+CREATE TABLE produtos (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    categoria VARCHAR(50),
+    preco DECIMAL(10, 2)
+);
+
+-- Inserção de dados na tabela produtos nome, categoria, preco) VALUES
+(1, 'Produto A', 'Categoria 1', 150.00),
+(2, 'Produto B', 'Categoria 1', 200.00),
+(3, 'Produto C', 'Categoria 2', 300.00),
+(4, 'Produto D', 'Categoria 2', 400.00);
+    </code></pre>
+
+    <h2>Exercício 2: Junção com Filtro Avançado</h2>
+    <pre><code>
+-- Criação das tabelas clientes e pedidos
+CREATE TABLE clientes (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cidade VARCHAR(50)
+);
+
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY,
+    cliente_id INT,
+    valor_total DECIMAL(10, 2),
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+-- Inserção de dados nas tabelas clientes e pedidos
+INSERT INTO clientes (id, nome, cidade) VALUES
+(1, 'Cliente A', 'São Paulo'),
+(2, 'Cliente B', 'Rio de Janeiro');
+
+INSERT INTO pedidos (id, cliente_id, valor_total) VALUES
+(1, 1, 500.00),
+(2, 1, 1500.00),
+(3, 2, 700.00);
+    </code></pre>
+
+    <h2>Exercício 3: Filtro com EXISTS</h2>
+    <pre><code>
+-- Dados já inseridos nas tabelas clientes e pedidos no exercício anterior
+    </code></pre>
+
+    <h2>Exercício 4: Filtro com GROUP BY e HAVING</h2>
+    <pre><code>
+-- Dados já inseridos na tabela produtos no exercício 1
+    </code></pre>
+
+    <h2>Exercício 5: Filtro com UNION</h2>
+    <pre><code>
+-- Criação da tabela fornecedores
+CREATE TABLE fornecedores (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cidade VARCHAR(50)
+);
+
+-- Inserção de dados na tabela fornecedores
+INSERT INTO fornecedores (id, nome, cidade) VALUES
+(1, 'Fornecedor A', 'Rio de Janeiro'),
+(2, 'Fornecedor B', 'São Paulo');
+    </code></pre>
+
+    <h2>Exercício 6: Filtro com JOIN e Subconsulta</h2>
+    <pre><code>
+-- Criação das tabelas itens_pedido e produtos (já criada no exercício 1)
+CREATE TABLE itens_pedido (
+    id INT PRIMARY KEY,
+    pedido_id INT,
+    produto_id INT,
+    quantidade INT,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
+
+-- Inserção de dados na tabela itens_pedido
+INSERT INTO itens_pedido (id, pedido_id, produto_id, quantidade) VALUES
+(1, 1, 1, 2),
+(2, 2, 2, 1),
+(3, 3, 3, 3);
+    </code></pre>
+
+    <h2>Exercício 7: Filtro com Funções de Data</h2>
+    <pre><code>
+-- Dados já inseridos na tabela pedidos no exercício 2
+    </code></pre>
+
+    <h2>Exercício 8: Filtro com CASE</h2>
+    <pre><code>
+-- Dados já inseridos na tabela produtos no exercício 1
+    </code></pre>
+
+    <h2>Exercício 9: Filtro com Window Functions</h2>
+    <pre><code>
+-- Dados já inseridos na tabela produtos no exercício 1
+    </code></pre>
+
+    <h2>Exercício 10: Filtro com JSON</h2>
+    <pre><code>
+-- Criação da tabela clientes com coluna JSON
+CREATE TABLE clientes (
+    id INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cidade VARCHAR(50),
+    preferencias JSON
+);
+
+-- Inserção de dados na tabela clientes
+INSERT INTO clientes (id, nome, cidade, preferencias) VALUES
+(1, 'Cliente A', 'São Paulo', '{"interesses": ["promoções", "novidades"]}'),
+(2, 'Cliente B', 'Rio de Janeiro', '{"interesses": ["descontos"]}');
+    </code></pre>
+</body>
+</html>
+
+

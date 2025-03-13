@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listas de Exercícios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .exercise {
+            margin-bottom: 20px;
+        }
+        .exercise h2 {
+            color: #555;
+        }
+        .exercise pre {
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</as de Exercícios</h1>
+
+
+	
+		<a href="atividade4_scriptscriacao.html">Scripts para criação de tabelas e inserção de massa de dados</a>
+	
+
+
+
+        <div class="exercise">
+            <h2>Exercício 1: Subconsulta Correlacionada</h2>
+            <pre><code>SELECT * 
+FROM produtos p1
+WHERE preco > (
+    SELECT AVG(preco)
+    FROM produtos p2
+    WHERE p2.categoria = p1.categoria
+);</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 2: Junção com Filtro Avançado</h2>
+            <pre><code>SELECT c.nome, p.valor_total
+FROM clientes c
+JOIN pedidos p ON c.id = p.cliente_id
+WHERE c.cidade = 'São Paulo';</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 3: Filtro com EXISTS</h2>
+            <pre><code>SELECT * 
+FROM clientes c
+WHERE EXISTS (
+    SELECT 1
+    FROM pedidos p
+    WHERE p.cliente_id = c.id AND p.valor_total > 1000
+);</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 4: Filtro com GROUP BY e HAVING</h2>
+            <pre><code>SELECT categoria, AVG(preco) AS preco_medio
+FROM produtos
+GROUP BY categoria
+HAVING preco_medio > 500;</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 5: Filtro com UNION</h2>
+            <pre><code>SELECT nome FROM clientes WHERE cidade = 'Rio de Janeiro'
+UNION
+SELECT nome FROM fornecedores WHERE cidade = 'Rio de Janeiro';</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 6: Filtro com JOIN e Subconsulta</h2>
+            <pre><code>SELECT pr.nome, p.valor_total
+FROM produtos pr
+JOIN itens_pedido ip ON pr.id = ip.produto_id
+JOIN pedidos p ON ip.pedido_id = p.id
+WHERE p.valor_total > 1000;</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 7: Filtro com Funções de Data</h2>
+            <pre><code>SELECT * 
+FROM pedidos
+WHERE YEAR(data_pedido) = 2025 AND MONTH(data_pedido) = 3;</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 8: Filtro com CASE</h2>
+            <pre><code>SELECT nome, preco,
+    CASE
+        WHEN preco <= 500 THEN 'Barato'
+        WHEN preco > 500 AND preco <= 1000 THEN 'Médio'
+        ELSE 'Caro'
+    END AS classificacao
+FROM produtos
+HAVING classificacao = 'Caro';</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 9: Filtro com Window Functions</h2>
+            <pre><code>SELECT nome, categoria, preco
+FROM (
+    SELECT nome, categoria, preco,
+           ROW_NUMBER() OVER (PARTITION BY categoria ORDER BY preco DESC) AS rank
+    FROM produtos
+) AS ranked
+WHERE rank = 1;</code></pre>
+        </div>
+
+        <div class="exercise">
+            <h2>Exercício 10: Filtro com JSON</h2>
+            <pre><code>SELECT * 
+FROM clientes
+WHERE JSON_CONTAINS(preferencias, '"promoções"', '$.interesses');</code></pre>
+        </div>
+    </div>
+</body>
+</html>
