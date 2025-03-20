@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelo de Data Warehouse</title>
+</head>
+<body>
+    <h1>Você foi contratado para criar um pequeno modelo de data warehouse utilizando o MySQL.</h1>
+    <p>O objetivo é armazenar e analisar dados de vendas de produtos. Para isso, você deve seguir os passos abaixo:</p>
+
+    <h2>Criação do Data Warehouse:</h2>
+    <ul>
+        <li>Crie um banco de dados chamado <strong>datawarehouse</strong>.</li>
+        <li>Crie as tabelas de dimensões <strong>DimProduto</strong> e <strong>DimCliente</strong>.</li>
+        <li>Crie a tabela de fatos <strong>FatoVendas</strong>.</li>
+    </ul>
+
+    <h2>Inserção de Dados:</h2>
+    <p>Insira os dados fornecidos (arquivos .csv) nas tabelas <a href="dimProduto.csv">DimProduto</a>, <a href="dimCliente.csv">DimCliente</a> e <a href="fatoVendas.csv">FatoVendas</a>. </p>
+
+    <h2>Criação de uma Procedure de Limpeza:</h2>
+    <p>Crie uma procedure chamada <strong>LimparDados</strong> que automatize o processo de limpeza dos dados. A procedure deve:</p>
+    <ul>
+        <li>Remover espaços no início e no final dos campos.</li>
+        <li>Remover registros duplicados.</li>
+        <li>Remover registros com valores NULL.</li>
+        <li>Normalizar a formatação das datas.</li>
+    </ul>
+
+    <h2>Criação de Views:</h2>
+    <p>Crie 10 views para analisar os dados do data warehouse (os campos exibidos, devem ser suficientes para dar sentido a consulta). As views devem incluir:</p>
+    <ul>
+        <li>Produtos Vendidos</li>
+        <li>Vendas por Cliente</li>
+        <li>Vendas por Data</li>
+        <li>Produtos por Categoria</li>
+        <li>Vendas por Cidade</li>
+        <li>Vendas por Mês</li>
+        <li>Clientes por Cidade</li>
+        <li>Produtos por Cliente</li>
+        <li>Vendas por Produto e Cidade</li>
+        <li>Vendas por Produto e Mês</li>
+    </ul>
+
+    <h2>Consultas Avançadas:</h2>
+    <p>Escreva 5 consultas SQL avançadas para obter informações específicas das views criadas. Os campos exibidos, devem ser suficientes para dar sentido a consulta. As consultas devem incluir:</p>
+    <ul>
+        <li>Produtos mais vendidos.</li>
+        <li>Clientes que mais compraram.</li>
+        <li>Vendas por mês.</li>
+        <li>Quantidade de produtos por categoria.</li>
+        <li>Vendas por cidade.</li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,25 @@
+ProdutoID,NomeProduto,Categoria
+1,NULL," Eletrodomésticos "
+1,Televisão,Eletrônicos
+2,Fogão," Eletrodomésticos "
+3,"Ar Condicionado",Eletrodomésticos
+4,NULL,Eletrodomésticos
+5,"Ar Condicionado",NULL
+6,NULL,Eletrodomésticos
+6,Secadora,Eletrodomésticos
+7,Fogão," Eletrônicos "
+8,Geladeira,NULL
+9,Secadora," Eletrodomésticos "
+10,Ventilador,Eletrônicos
+11,Fogão,Eletrônicos
+11,Secadora,Eletrodomésticos
+12,"Máquina de Lavar",Eletrônicos
+13,Secadora," Eletrodomésticos "
+14,Fogão,NULL
+15,NULL,NULL
+16,Televisão," Eletrodomésticos "
+16,Ventilador,Eletrônicos
+17," Geladeira ",NULL
+18,NULL,NULL
+19,Fogão,Eletrodomésticos
+20,Notebook,Eletrônicos

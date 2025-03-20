@@ -1,0 +1,22 @@
+ClienteID;NomeCliente;Cidade
+1;"Pedro Santos";"São Paulo"
+2;"Lucas Almeida";"Rio de Janeiro"
+3;"Carlos Souza";"Belo Horizonte"
+4;"Ana Paula";Curitiba
+5;"Fernanda Costa";"Porto Alegre"
+6;"Juliana Pereira";"São Paulo"
+7;"Marcos Lima";"Rio de Janeiro"
+8;"Patrícia Rodrigues";"Belo Horizonte"
+9;"João Silva";Curitiba
+10;"Maria Oliveira";"Porto Alegre"
+11;NULL;"São Paulo"
+11;"Carlos Souza";"Belo Horizonte"
+12;"Pedro Santos";NULL
+13;"Lucas Almeida";"Rio de Janeiro"
+14;"Carlos Souza";"Belo Horizonte"
+15;"Ana Paula";Curitiba
+16;"Fernanda Costa";"Porto Alegre"
+17;"Juliana Pereira";"São Paulo"
+18;"Marcos Lima";"Rio de Janeiro"
+19;"Patrícia Rodrigues";"Belo Horizonte"
+20;" João Silva ";NULL
