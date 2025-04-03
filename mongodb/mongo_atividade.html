@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de MongoDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        header, section {
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+        p, ul, ol {
+            margin: 10px 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Atividade Avaliada de MongoDB – Criação e Manipulação de Banco de Dados</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Descrição do Projeto</h2>
+            <p>Você foi contratado para projetar e implementar o banco de dados de um comércio eletrônico especializado na venda de bicicletas e acessórios. O sistema deve ser capaz de armazenar informações relacionadas aos produtos, clientes, pedidos e fornecedores.</p>
+        </section>
+        <section>
+            <h2>Tarefas</h2>
+            <ol>
+                <li>
+                    <strong>Criação do Banco de Dados:</strong>
+                    <p>Configure um banco de dados MongoDB chamado <code>comercio_bicicletas</code>.</p>
+                </li>
+                <li>
+                    <strong>Coleções Necessárias:</strong>
+                    <p>Crie as seguintes coleções, com as respectivas estruturas sugeridas (campos e exemplos de dados):</p>
+                    <ul>
+                        <li><strong>produtos:</strong> Informações como nome, descrição, preço, categoria (ex.: "bicicleta", "acessório"), estoque e ID do fornecedor.</li>
+                        <li><strong>clientes:</strong> Detalhes como nome completo, email, endereço, telefone e histórico de compras.</li>
+                        <li><strong>pedidos:</strong> Contém ID do cliente, lista de produtos (com quantidade), data do pedido, status do pedido (ex.: "pendente", "enviado").</li>
+                        <li><strong>fornecedores:</strong> Dados do fornecedor, como nome, contato, localização e lista de produtos fornecidos.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Consultas:</strong>
+                    <p>Desenvolva e execute as seguintes consultas:</p>
+                    <ul>
+                        <li>Listar todos os produtos disponíveis de uma determinada categoria.</li>
+                        <li>Buscar o histórico de compras de um cliente específico.</li>
+                        <li>Atualizar o status de um pedido para "enviado".</li>
+                        <li>Listar os produtos com estoque abaixo de um determinado valor.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Inserções e Atualizações:</strong>
+                    <p>Insira pelo menos 5 documentos em cada coleção para simular os dados do comércio eletrônico. Atualize o preço de um produto em uma das categorias.</p>
+                </li>
+                <li>
+                    <strong>Relatório:</strong>
+                    <p>Apresente capturas de tela do terminal mostrando as consultas realizadas e os resultados.</p>
+                </li>
+            </ol>
+        </section>
+        <section>
+            <h2>Critérios de Avaliação</h2>
+            <ul>
+                <li>Estrutura do banco de dados adequada às necessidades descritas.</li>
+                <li>Correção das consultas e manipulação de dados.</li>
+                <li>Organização e clareza na apresentação do relatório.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

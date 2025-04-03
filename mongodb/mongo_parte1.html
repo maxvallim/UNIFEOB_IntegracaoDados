@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial MongoDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        section {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #000000;
+            border-radius: 8px;
+            background-color: #f8f8f8;
+        }
+        h2 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+        .important {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tutorial MongoDB</h1>
+        <p>Comandos detalhados, CRUD e consultas avançadas.</p>
+    </header>
+
+    <section>
+        <h2>1. Criar um Banco de Dados</h2>
+        <ul>
+            <li>Conecte-se ao MongoDB no terminal usando <code>mongo</code>.</li>
+            <li>Crie ou selecione um banco de dados com o comando:
+                <code>use nomeDoBanco</code>. Exemplo: <code>use biblioteca</code>.
+            </li>
+            <li>Veja os bancos de dados disponíveis com <code>show databases</code>.</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>2. Criar uma Coleção e Inserir Documentos</h2>
+        <ul>
+            <li>Crie uma coleção ao inserir o primeiro documento:
+                <code>db.clientes.insert({nome: "João", idade: 30})</code>.
+            </li>
+            <li>Insira múltiplos documentos usando um array:
+                <code>db.clientes.insertMany([{nome: "Maria", idade: 25}, {nome: "Pedro", idade: 40}])</code>.
+            </li>
+            <li>Verifique os documentos inseridos com:
+                <code>db.clientes.find()</code>.
+            </li>
+            <li>Para uma exibição formatada, use:
+                <code>db.clientes.find().pretty()</code>.
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>3. Operações CRUD</h2>
+        <h3>Criar (Create)</h3>
+        <ul>
+            <li>Inserir um único documento com:
+                <code>db.usuarios.insertOne({nome: "Carlos", idade: 50})</code>.
+            </li>
+            <li>Inserir múltiplos documentos com:
+                <code>db.usuarios.insertMany([{nome: "Ana", idade: 28}, {nome: "Paulo", idade: 35}])</code>.
+            </li>
+        </ul>
+
+        <h3>Ler (Read)</h3>
+        <ul>
+            <li>Leia todos os documentos:
+                <code>db.usuarios.find()</code>.
+            </li>
+            <li>Busque documentos com filtro:
+                <code>db.usuarios.find({idade: {$gte: 30}})</code>.
+            </li>
+            <li>Pesquise por padrão de texto com regex:
+                <code>db.usuarios.find({nome: {$regex: /a/i}})</code>.
+            </li>
+        </ul>
+
+        <h3>Atualizar (Update)</h3>
+        <ul>
+            <li>Atualize um único documento:
+                <code>db.usuarios.updateOne({nome: "Ana"}, {$set: {idade: 29}})</code>.
+            </li>
+            <li>Atualize múltiplos documentos:
+                <code>db.usuarios.updateMany({idade: {$lt: 30}}, {$set: {status: "ativo"}})</code>.
+            </li>
+            <li>Adicione novos campos:
+                <code>db.usuarios.updateMany({}, {$set: {assinatura: "premium"}})</code>.
+            </li>
+        </ul>
+
+        <h3>Excluir (Delete)</h3>
+        <ul>
+            <li>Exclua um documento específico:
+                <code>db.usuarios.deleteOne({nome: "Paulo"})</code>.
+            </li>
+            <li>Remova múltiplos documentos:
+                <code>db.usuarios.deleteMany({idade: {$lt: 35}})</code>.
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>4. Consultas Avançadas</h2>
+        <h3>Filtrar Documentos</h3>
+        <ul>
+            <li>Documentos maiores ou iguais:
+                <code>db.clientes.find({idade: {$gte: 18}})</code>.
+            </li>
+            <li>Busca com múltiplas condições (AND):
+                <code>db.clientes.find({idade: {$gte: 18}, nome: {$regex: /a/i}})</code>.
+            </li>
+            <li>Busca com OR:
+                <code>db.clientes.find({$or: [{nome: "Maria"}, {idade: 25}]})</code>.
+            </li>
+        </ul>
+
+        <h3>Ordenar e Paginar</h3>
+        <ul>
+            <li>Ordene resultados:
+                <code>db.clientes.find().sort({idade: -1})</code>.
+            </li>
+            <li>Limite resultados:
+                <code>db.clientes.find().limit(3)</code>.
+            </li>
+            <li>Pule resultados:
+                <code>db.clientes.find().skip(2)</code>.
+            </li>
+        </ul>
+
+        <h3>Contagem de Documentos</h3>
+        <ul>
+            <li>Conte todos os documentos:
+                <code>db.clientes.countDocuments()</code>.
+            </li>
+            <li>Conte documentos com filtro:
+                <code>db.clientes.countDocuments({idade: {$gte: 25}})</code>.
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>5. Boas Práticas e Dicas</h2>
+        <ul>
+            <li>Use nomes em formato <code>camelCase</code> para campos e coleções, evitando espaços e acentos.</li>
+            <li>Certifique-se de que a estrutura do banco segue as regras do JavaScript, pois o MongoDB é case-sensitive.</li>
+            <li>Aproveite os operadores avançados, como <code>$in</code> e <code>$all</code>, para consultas dinâmicas e flexíveis.</li>
+        </ul>
+    </section>
+</body>
+</html>
