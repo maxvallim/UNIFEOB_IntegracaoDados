@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicação do Código Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        h1, h2 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explicação do Código Python</h1>
+    <p>Este programa Python realiza as seguintes tarefas:</p>
+    <ul>
+        <li>Carrega um arquivo CSV contendo dados de empregados.</li>
+        <li>Padroniza nomes para maiúsculas.</li>
+        <li>Valida e-mails, corrigindo casos inválidos.</li>
+        <li>Corrige formatos de datas e preenche valores ausentes.</li>
+        <li>Salva o arquivo limpo em um novo arquivo CSV.</li>
+    </ul>
+
+    <h2>Código Python</h2>
+    <pre>
+import re
+import pandas as pd
+
+# Carregar o arquivo CSV
+df = pd.read_csv("c:/temp/dadosempregados.csv")
+
+# Função para padronizar nomes
+def padronizar_nome(nome):
+    if pd.isna(nome) or nome.strip() == "":
+        return "Nome Não Informado"
+    return nome.upper()
+
+# Função para validar e-mails
+def validar_email(email):
+    if pd.isna(email) or not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", str(email)):
+        return "email_invalido@test.com"
+    return email.lower()
+
+# Função para corrigir datas
+def corrigir_data(data):
+    try:
+        return pd.to_datetime(data, dayfirst=True).strftime("%Y-%m-%d")
+    except:
+        return None
+
+# Aplicar as correções e padronizações
+df["nome"] = df["nome"].apply(padronizar_nome)
+df["email"] = df["email"].apply(validar_email)
+df["data_nascimento"] = df["data_nascimento"].apply(corrigir_data)
+
+# Substituir valores ausentes (NaN) por valores padrão
+df["nome"] = df["nome"].fillna("Nome Não Informado")
+df["email"] = df["email"].fillna("email_invalido@test.com")
+df["data_nascimento"] = df["data_nascimento"].fillna("1900-01-01")
+
+# Salvar os dados limpos em um novo arquivo
+df.to_csv("c:/temp/dadosempregados_limpos.csv", index=False)
+
+print("Dados limpos e padronizados foram salvos com sucesso!")
+    </pre>
+
+    <h2>Explicação do Código</h2>
+    <ol>
+        <li><b>Importações:</b> São importadas as bibliotecas <code>re</code> (para expressões regulares) e <code>pandas</code> (para manipulação de dados).</li>
+        <li><b>Carregar o arquivo CSV:</b> O arquivo é carregado usando o método <code>pd.read_csv</code>.</li>
+        <li><b>Funções:</b>
+            <ul>
+                <li><code>padronizar_nome:</code> Padroniza os nomes para maiúsculas ou substitui por "Nome Não Informado" se estiver vazio.</li>
+                <li><code>validar_email:</code> Verifica a validade do e-mail e o substitui por "email_invalido@test.com" se for inválido.</li>
+                <li><code>corrigir_data:</code> Converte datas para o formato padrão ISO ou retorna <code>None</code> se a data for inválida.</li>
+            </ul>
+        </li>
+        <li><b>Aplicar Correções:</b> As funções são aplicadas às colunas correspondentes do DataFrame.</li>
+        <li><b>Substituir Valores Ausentes:</b> Valores nulos (NaN) são preenchidos com valores padrão.</li>
+        <li><b>Salvar Arquivo:</b> Os dados limpos são salvos em um novo arquivo CSV usando o método <code>to_csv</code>.</li>
+        <li><b>Mensagem:</b> Uma mensagem é exibida informando que os dados foram salvos com sucesso.</li>
+    </ol>
+
+    <p>Pronto! Este HTML explica detalhadamente o funcionamento do código Python.</p>
+</body>
+</html>

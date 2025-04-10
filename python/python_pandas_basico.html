@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial de Pandas Python</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        h1, h2, h3 {
+            color: #222;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #000;
+        }
+        
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #000;
+        }
+        
+        pre {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid #555;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .note {
+            background-color: #f8f8f8;
+            border-left: 4px solid #777;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tutorial de Pandas em Python</h1>
+        
+        <p>Pandas é uma biblioteca Python poderosa para análise e manipulação de dados. Este tutorial cobre conceitos básicos e operações avançadas.</p>
+        
+        <div class="note">
+            <strong>Instalação:</strong> <code>pip install pandas</code>
+        </div>
+        
+        <h2>1. Importando o Pandas</h2>
+        <pre><code>import pandas as pd</code></pre>
+        
+        <h2>2. Estruturas de Dados Básicas</h2>
+        
+        <h3>Series</h3>
+        <p>Uma Series é como uma coluna em uma tabela, um array unidimensional.</p>
+        <pre><code># Criando uma Series
+s = pd.Series([1, 3, 5, 7, 9])
+print(s)</code></pre>
+        
+        <h3>DataFrame</h3>
+        <p>Um DataFrame é uma tabela bidimensional com linhas e colunas.</p>
+        <pre><code># Criando um DataFrame
+data = {
+    'Nome': ['Ana', 'Carlos', 'Maria', 'João'],
+    'Idade': [25, 30, 28, 22],
+    'Cidade': ['SP', 'RJ', 'BH', 'POA']
+}
+
+df = pd.DataFrame(data)
+print(df)</code></pre>
+        
+        <h2>3. Operações Básicas</h2>
+        
+        <h3>Visualizando Dados</h3>
+        <pre><code># Primeiras linhas
+print(df.head(2))
+
+# Últimas linhas
+print(df.tail(2))
+
+# Informações do DataFrame
+print(df.info())
+
+# Estatísticas descritivas
+print(df.describe())</code></pre>
+        
+        <h3>Selecionando Dados</h3>
+        <pre><code># Selecionar uma coluna
+print(df['Nome'])
+
+# Selecionar múltiplas colunas
+print(df[['Nome', 'Idade']])
+
+# Selecionar linhas por índice
+print(df.iloc[1])  # Segunda linha
+print(df.iloc[1:3])  # Linhas 2 e 3
+
+# Selecionar por condição
+print(df[df['Idade'] > 25])</code></pre>
+        
+        <h2>4. Manipulando Dados</h2>
+        <pre><code># Adicionar nova coluna
+df['Salário'] = [5000, 6000, 5500, 4500]
+print(df)
+
+# Remover coluna
+df = df.drop('Salário', axis=1)
+print(df)
+
+# Renomear colunas
+df = df.rename(columns={'Cidade': 'Cidade'})
+print(df)</code></pre>
+        
+        <h2>5. Valores Ausentes</h2>
+        <pre><code># Criar DataFrame com valores ausentes
+import numpy as np
+df_nulos = pd.DataFrame({
+    'A': [1, 2, np.nan, 4],
+    'B': [5, np.nan, np.nan, 8],
+    'C': [10, 20, 30, 40]
+})
+
+# Verificar valores nulos
+print(df_nulos.isnull())
+
+# Remover linhas com valores nulos
+print(df_nulos.dropna())
+
+# Preencher valores nulos
+print(df_nulos.fillna(value=0))</code></pre>
+        
+        <h2>6. Operações Agregadas</h2>
+        <pre><code># Soma
+print(df['Idade'].sum())
+
+# Média
+print(df['Idade'].mean())
+
+# Agrupamento
+print(df.groupby('Cidade')['Idade'].mean())</code></pre>
+        
+        <h2>7. Salvando e Carregando Dados</h2>
+        <pre><code># Salvar para CSV
+df.to_csv('dados.csv', index=False)
+
+# Carregar de CSV
+df_csv = pd.read_csv('dados.csv')
+print(df_csv.head())
+
+# Salvar para Excel
+df.to_excel('dados.xlsx', index=False)
+
+# Carregar de Excel
+df_excel = pd.read_excel('dados.xlsx')
+print(df_excel.head())</code></pre>
+        
+        <h2>8. Dicas Avançadas</h2>
+        
+        <h3>Aplicando Funções</h3>
+        <pre><code># Aplicar função a uma coluna
+df['Idade_dobro'] = df['Idade'].apply(lambda x: x * 2)
+print(df)</code></pre>
+        
+        <h3>Pivot Tables</h3>
+        <pre><code># Exemplo de pivot table
+df_vendas = pd.DataFrame({
+    'Data': pd.date_range('20230101', periods=10),
+    'Produto': ['A', 'B', 'A', 'C', 'B', 'A', 'C', 'B', 'A', 'C'],
+    'Quantidade': [10, 20, 15, 30, 10, 25, 5, 15, 20, 10],
+    'Preço': [100, 150, 100, 200, 150, 100, 200, 150, 100, 200]
+})
+
+pivot = df_vendas.pivot_table(
+    index='Produto',
+    values='Quantidade',
+    aggfunc='sum'
+)
+print(pivot)</code></pre>
+        
+        <div class="note">
+            <p>Este tutorial cobre os conceitos básicos do pandas. A biblioteca tem muito mais funcionalidades para explorar!</p>
+        </div>
+    </div>
+</body>
+</html>

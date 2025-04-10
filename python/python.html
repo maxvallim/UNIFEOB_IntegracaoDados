@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python e Integração de Dados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* Fundo branco */
+            color: #000; /* Letras pretas */
+        }
+        header {
+            text-align: center;
+            padding: 2rem;
+            background: #f5f5f5; /* Fundo cinza claro */
+            border-bottom: 2px solid #000;
+        }
+        section {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #000;
+        }
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-top: 2px solid #000;
+            font-size: 0.9rem;
+        }
+        .highlight {
+            color: #007BFF; /* Destaque em azul */
+            font-weight: bold;
+        }
+        .links a {
+            color: #007BFF; /* Azul para links */
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Python & Integração de Dados</h1>
+        <p class="highlight">Conectando Fontes de Dados com Facilidade e Eficiência</p>
+    </header>
+    <section>
+        <h2>O que é Python?</h2>
+        <p>Python é uma linguagem de programação amplamente conhecida por sua simplicidade e versatilidade. Com suas poderosas bibliotecas como <span class="highlight">pandas</span>, <span class="highlight">NumPy</span> e <span class="highlight">openpyxl</span>, é possível realizar desde tarefas simples até complexas integrações de dados.</p>
+
+        <h2>Por que integração de dados?</h2>
+        <p>Integrar dados é o processo de combinar informações provenientes de diferentes fontes para facilitar análises, tomada de decisões e automação de processos. Usando Python, é possível conectar arquivos locais (como XML, Excel), bancos de dados (SQL Server, PostgreSQL, MongoDB) e até mesmo serviços remotos, como Firebase.</p>
+
+        <h3>Exemplos de Integração com Python</h3>
+        <h4>Arquivos locais:</h4>
+        - **Ler um arquivo XML:**
+          ```python
+          import pandas as pd
+          df = pd.read_xml('data.xml')
+          print(df.head())
+          ```
+        - **Ler um arquivo Excel (.xls ou .xlsx):**
+          ```python
+          df = pd.read_excel('data.xls')
+          print(df.head())
+          ```
+
+        <h4>Conexão com Bancos de Dados:</h4>
+        - **MySQL:**
+          ```python
+          import pandas as pd
+          from sqlalchemy import create_engine
+
+          engine = create_engine('mysql+pymysql://user:password@localhost/db_name')
+          query = "SELECT * FROM tabela"
+          df = pd.read_sql(query, engine)
+          print(df.head())
+          ```
+        - **SQL Server:**
+          ```python
+          engine = create_engine('mssql+pyodbc://user:password@server_name/db_name')
+          query = "SELECT * FROM tabela"
+          df = pd.read_sql(query, engine)
+          print(df.head())
+          ```
+        - **PostgreSQL:**
+          ```python
+          engine = create_engine('postgresql://user:password@localhost/db_name')
+          query = "SELECT * FROM tabela"
+          df = pd.read_sql(query, engine)
+          print(df.head())
+          ```
+
+        <h4>Serviços de dados modernos:</h4>
+        - **MongoDB:**
+          ```python
+          from pymongo import MongoClient
+
+          client = MongoClient('localhost', 27017)
+          db = client['database_name']
+          collection = db['collection_name']
+          data = list(collection.find())
+          print(data)
+          ```
+        - **Firebase:**
+          ```python
+          import firebase_admin
+          from firebase_admin import credentials, firestore
+
+          cred = credentials.Certificate("path/to/your/serviceAccountKey.json")
+          firebase_admin.initialize_app(cred)
+
+          db = firestore.client()
+          docs = db.collection('collection_name').get()
+          for doc in docs:
+              print(doc.to_dict())
+          ```
+
+        <h3>Ampliando a Integração de Dados:</h3>
+        <p>Python facilita a comunicação entre diferentes fontes de dados. Por exemplo:</p>
+        <ul>
+            <li><strong>Automação:</strong> Combine dados de arquivos e bancos de dados para criar relatórios automatizados.</li>
+            <li><strong>API:</strong> Integre dados diretamente de APIs, ampliando a coleta de informações.</li>
+            <li><strong>Análise Avançada:</strong> Use bibliotecas como NumPy, pandas e scikit-learn para transformar dados brutos em insights valiosos.</li>
+        </ul>
+        <div class="links">
+            <h3>Recursos úteis:</h3>
+            <p><a href="python_pandas_basico.html" target="_blank">Tutorial Pandas</a></p>
+            <p><a href="atividades.html">Atividades</a></p>
+        </div>
+    </section>
+</body>
+</html>

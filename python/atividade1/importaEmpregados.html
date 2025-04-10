@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explicação do Código Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        h1, h2 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explicação do Código Python</h1>
+    <p>O código a seguir realiza a criação, manipulação e limpeza de dados utilizando um banco de dados MySQL e um arquivo CSV. As tarefas realizadas incluem:</p>
+    <ul>
+        <li>Conexão ao banco de dados MySQL.</li>
+        <li>Apagamento e criação de banco e tabelas.</li>
+        <li>Validação e limpeza de dados de um arquivo CSV.</li>
+        <li>Inserção dos dados tratados no banco de dados MySQL.</li>
+        <li>Finalização e encerramento da conexão com o banco de dados.</li>
+    </ul>
+
+    <h2>Código Python</h2>
+    <pre>
+import mysql.connector
+import pandas as pd
+
+# Conectar ao MySQL
+conexao = mysql.connector.connect(
+    host="127.0.0.1",  # Substitua pelo hostname do seu servidor MySQL
+    user="root",  # Nome de usuário do banco
+    password="root",  # Senha do banco
+)
+
+cursor = conexao.cursor()
+
+# Apagar o banco de dados se já existir
+try:
+    cursor.execute("DROP DATABASE IF EXISTS aula10042025")
+    print("Banco de dados 'aula10042025' apagado com sucesso (se existia).")
+except mysql.connector.Error as erro:
+    print(f"Erro ao apagar banco de dados: {erro}")
+
+# Criar o banco de dados
+try:
+    cursor.execute("CREATE DATABASE aula10042025")
+    print("Banco de dados 'aula10042025' criado com sucesso!")
+except mysql.connector.Error as erro:
+    print(f"Erro ao criar banco de dados: {erro}")
+
+# Selecionar o banco de dados
+try:
+    conexao.database = "aula10042025"
+except mysql.connector.Error as erro:
+    print(f"Erro ao selecionar banco de dados: {erro}")
+
+# Apagar a tabela 'empregados' se já existir
+try:
+    cursor.execute("DROP TABLE IF EXISTS empregados")
+    print("Tabela 'empregados' apagada com sucesso (se existia).")
+except mysql.connector.Error as erro:
+    print(f"Erro ao apagar tabela: {erro}")
+
+# Criar a tabela 'empregados'
+try:
+    tabela_empregados = """
+    CREATE TABLE empregados (
+        id INT PRIMARY KEY,
+        nome VARCHAR(100) NOT NULL,
+        email VARCHAR(255),
+        data_nascimento DATE NOT NULL
+    )
+    """
+    cursor.execute(tabela_empregados)
+    print("Tabela 'empregados' criada com sucesso!")
+except mysql.connector.Error as erro:
+    print(f"Erro ao criar tabela: {erro}")
+
+# Importar o arquivo CSV limpo
+try:
+    # Carregar os dados limpos do CSV
+    df_limpo = pd.read_csv("c:/temp/dadosempregados_limpos.csv")
+
+    # Inserir os registros na tabela 'empregados'
+    sql_inserir = """
+    INSERT INTO empregados (id, nome, email, data_nascimento)
+    VALUES (%s, %s, %s, %s)
+    """
+    valores = [tuple(row) for row in df_limpo.to_numpy()]
+
+    cursor.executemany(sql_inserir, valores)
+    conexao.commit()
+    print(f"{cursor.rowcount} registros inseridos na tabela 'empregados' com sucesso!")
+except mysql.connector.Error as erro:
+    print(f"Erro ao inserir registros: {erro}")
+
+# Fechar a conexão
+cursor.close()
+conexao.close()
+print("Conexão com o MySQL encerrada")
+    </pre>
+
+    <h2>Explicação do Código</h2>
+    <ol>
+        <li><b>Conexão ao MySQL:</b> A conexão é estabelecida utilizando <code>mysql.connector.connect()</code> com as credenciais fornecidas.</li>
+        <li><b>Apagar o Banco de Dados:</b> Se o banco já existir, ele será excluído para evitar conflitos.</li>
+        <li><b>Criar o Banco de Dados:</b> Um novo banco de dados é criado chamado <code>aula10042025</code>.</li>
+        <li><b>Criar a Tabela:</b> A tabela <code>empregados</code> é criada com colunas para ID, nome, email e data de nascimento.</li>
+        <li><b>Carregar e Processar CSV:</b> O arquivo CSV é carregado com o <code>pandas</code> e os registros são inseridos na tabela.</li>
+        <li><b>Fechar Conexão:</b> Finaliza a conexão para liberar os recursos.</li>
+    </ol>
+
+    <p>Este arquivo HTML documenta o código Python com explicações detalhadas e formatação apropriada. Você pode salvá-lo como <code>explicacao_codigo.html</code> e abri-lo no navegador para visualização.</p>
+</body>
+</html>
