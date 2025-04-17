@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial CRUD com DuckDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+        code {
+            display: block;
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #000000;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD com DuckDB e Python</h1>
+    <p>
+        Este tutorial ensina como implementar um sistema CRUD utilizando o <strong>DuckDB</strong>, 
+        uma ferramenta poderosa para análise de dados embutida e orientada a desempenho.
+    </p>
+
+    <h2>Instalação do DuckDB</h2>
+    <p>
+        Antes de começar, certifique-se de instalar o pacote <strong>DuckDB</strong>. 
+        Você pode fazer isso executando o seguinte comando no terminal:
+    </p>
+    <code>
+pip install duckdb
+    </code>
+    <p>
+        Após a instalação, você pode testar se está funcionando corretamente com o seguinte código:
+    </p>
+    <code>
+import duckdb
+
+# Conectar ao banco de dados em memória
+conexao = duckdb.connect()
+print("DuckDB instalado e funcionando corretamente!")
+    </code>
+
+    <h2>O que é DuckDB?</h2>
+    <p>
+        O DuckDB é um banco de dados embutido que foi projetado para análise de dados. 
+        Ele suporta SQL completo e oferece excelente desempenho para processamento de grandes conjuntos de dados. 
+        O banco é ideal para integrar dados e realizar análises diretamente no Python.
+    </p>
+
+    <h2>Configuração do Banco de Dados</h2>
+    <p>Criação de uma tabela de exemplo no DuckDB:</p>
+    <code>
+import duckdb
+
+# Criar ou conectar ao banco de dados em arquivo
+conexao = duckdb.connect("dados_duckdb.db")
+
+# Criar tabela
+conexao.execute("""
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY,
+    nome TEXT NOT NULL,
+    idade INTEGER NOT NULL
+)
+""")
+print("Tabela criada com sucesso!")
+    </code>
+
+    <h2>Adicionar Dados (CREATE)</h2>
+    <code>
+def adicionar_usuario(id, nome, idade):
+    conexao = duckdb.connect("dados_duckdb.db")
+    conexao.execute("INSERT INTO usuarios VALUES (?, ?, ?)", (id, nome, idade))
+    print(f"Usuário {nome} adicionado com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+adicionar_usuario(1, "Max", 30)
+    </code>
+
+    <h2>Listar Dados (READ)</h2>
+    <p>Exemplo de como listar todos os usuários:</p>
+    <code>
+def listar_usuarios():
+    conexao = duckdb.connect("dados_duckdb.db")
+    usuarios = conexao.execute("SELECT * FROM usuarios").fetchall()
+    for usuario in usuarios:
+        print(usuario)
+    conexao.close()
+
+# Exemplo de uso:
+listar_usuarios()
+    </code>
+
+    <h2>Atualizar Dados (UPDATE)</h2>
+    <p>Exemplo de como atualizar informações de um usuário:</p>
+    <code>
+def atualizar_usuario(id, novo_nome, nova_idade):
+    conexao = duckdb.connect("dados_duckdb.db")
+    conexao.execute("UPDATE usuarios SET nome = ?, idade = ? WHERE id = ?", (novo_nome, nova_idade, id))
+    print(f"Usuário de ID {id} atualizado com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+atualizar_usuario(1, "Maximilian", 31)
+    </code>
+
+    <h2>Excluir Dados (DELETE)</h2>
+    <p>Exemplo de como deletar um usuário pelo ID:</p>
+    <code>
+def deletar_usuario(id):
+    conexao = duckdb.connect("dados_duckdb.db")
+    conexao.execute("DELETE FROM usuarios WHERE id = ?", (id,))
+    print(f"Usuário de ID {id} removido com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+deletar_usuario(1)
+    </code>
+
+    <h2>Benefícios do DuckDB</h2>
+    <p>
+        O DuckDB é uma solução poderosa para análise e integração de dados, oferecendo:
+    </p>
+    <ul>
+        <li>Processamento rápido de grandes conjuntos de dados.</li>
+        <li>Compatibilidade total com SQL.</li>
+        <li>Facilidade de uso com Python para desenvolvimento e análise.</li>
+    </ul>
+</body>
+</html>

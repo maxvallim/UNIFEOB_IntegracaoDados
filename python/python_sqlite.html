@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD com SQLite e Python</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            border-bottom: 2px solid #000;
+            padding-bottom: 5px;
+        }
+        code {
+            display: block;
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #000;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD com SQLite e Python</h1>
+    <p>Este tutorial ensina como implementar um sistema CRUD utilizando SQLite e Python, com foco no ambiente de integração de dados.</p>
+
+    <h2>O que é SQLite?</h2>
+    <p>O SQLite é um banco de dados leve, fácil de integrar e perfeito para consolidar dados em projetos de integração, teste e validação.</p>
+
+    <h2>Configuração do Banco de Dados</h2>
+    <code>
+import sqlite3
+
+# Criar ou conectar ao banco local
+conexao = sqlite3.connect("integracao_dados.db")
+cursor = conexao.cursor()
+
+# Criar tabela para consolidar dados
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS dados (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fonte TEXT NOT NULL,
+    dado TEXT NOT NULL
+)
+""")
+print("Tabela criada com sucesso para integração!")
+conexao.close()
+    </code>
+
+    <h2>Adicionar Dados (CREATE)</h2>
+    <code>
+def adicionar_dado(fonte, dado):
+    conexao = sqlite3.connect("integracao_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO dados (fonte, dado) VALUES (?, ?)", (fonte, dado))
+    conexao.commit()
+    print(f"Dado da fonte {fonte} adicionado com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+adicionar_dado("API Externa", '{"nome": "Max", "idade": 30}')
+    </code>
+
+    <h2>Listar Dados (READ)</h2>
+    <code>
+def listar_dados():
+    conexao = sqlite3.connect("integracao_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT * FROM dados")
+    registros = cursor.fetchall()
+    for registro in registros:
+        print(registro)
+    conexao.close()
+
+# Exemplo de uso:
+listar_dados()
+    </code>
+
+    <h2>Atualizar Dados (UPDATE)</h2>
+    <code>
+def atualizar_dado(id, nova_fonte, novo_dado):
+    conexao = sqlite3.connect("integracao_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("UPDATE dados SET fonte = ?, dado = ? WHERE id = ?", (nova_fonte, novo_dado, id))
+    conexao.commit()
+    print(f"Dado de ID {id} atualizado com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+atualizar_dado(1, "Fonte Atualizada", '{"nome": "Maximilian", "idade": 31}')
+    </code>
+
+    <h2>Excluir Dados (DELETE)</h2>
+    <code>
+def deletar_dado(id):
+    conexao = sqlite3.connect("integracao_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("DELETE FROM dados WHERE id = ?", (id,))
+    conexao.commit()
+    print(f"Dado de ID {id} removido com sucesso!")
+    conexao.close()
+
+# Exemplo de uso:
+deletar_dado(1)
+    </code>
+</body>
+</html>

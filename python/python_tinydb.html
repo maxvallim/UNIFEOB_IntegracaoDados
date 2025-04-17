@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial CRUD com TinyDB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+        code {
+            display: block;
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #000000;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD com TinyDB e Python</h1>
+    <p>
+        Este tutorial ensina como implementar um sistema CRUD utilizando o <strong>TinyDB</strong>, 
+        destacando o conceito de tabelas e abordando todos os passos necessários, incluindo instalação e exemplos práticos.
+    </p>
+
+    <h2>Instalação do TinyDB</h2>
+    <p>
+        Antes de começar, certifique-se de instalar o pacote <strong>TinyDB</strong>. 
+        Você pode fazer isso executando o seguinte comando no terminal:
+    </p>
+    <code>
+pip install tinydb
+    </code>
+    <p>
+        Após a instalação, você pode testar se está tudo funcionando corretamente com o seguinte código:
+    </p>
+    <code>
+from tinydb import TinyDB
+
+# Criar banco de dados de teste
+db = TinyDB('teste.json')
+print("TinyDB instalado e funcionando corretamente!")
+    </code>
+
+    <h2>O que é TinyDB?</h2>
+    <p>
+        O TinyDB é um banco de dados NoSQL leve, baseado em JSON, que permite organizar dados em tabelas (collections). 
+        Isso facilita a separação lógica de diferentes tipos de dados no mesmo banco de dados.
+    </p>
+
+    <h2>Conceito de Tabela no TinyDB</h2>
+    <p>
+        No TinyDB, uma tabela representa uma coleção separada de documentos. Você pode criar e gerenciar múltiplas tabelas 
+        dentro do mesmo arquivo de banco de dados, permitindo uma estrutura mais organizada e modular.
+    </p>
+    <p>Principais métodos relacionados a tabelas:</p>
+    <ul>
+        <li><code>db.table('nome_tabela')</code>: Cria ou acessa uma tabela no banco de dados.</li>
+        <li><code>table.insert(data)</code>: Insere um documento na tabela.</li>
+        <li><code>table.all()</code>: Recupera todos os documentos de uma tabela.</li>
+    </ul>
+
+    <h2>Configuração do Banco de Dados com Tabelas</h2>
+    <code>
+from tinydb import TinyDB
+
+# Criar ou conectar ao banco de dados
+db = TinyDB('dados.json')
+
+# Criar tabelas
+usuarios = db.table('usuarios')
+produtos = db.table('produtos')
+
+print("Tabelas criadas com sucesso!")
+    </code>
+
+    <h2>Adicionar Dados (CREATE)</h2>
+    <p>Exemplo de como adicionar dados em diferentes tabelas:</p>
+    <code>
+def adicionar_usuario(nome, idade):
+    usuarios = TinyDB('dados.json').table('usuarios')
+    usuarios.insert({'nome': nome, 'idade': idade})
+    print(f"Usuário {nome} adicionado com sucesso!")
+
+def adicionar_produto(nome, preco):
+    produtos = TinyDB('dados.json').table('produtos')
+    produtos.insert({'nome': nome, 'preco': preco})
+    print(f"Produto {nome} adicionado com sucesso!")
+
+# Exemplo de uso:
+adicionar_usuario("Max", 30)
+adicionar_produto("Notebook", 2500)
+    </code>
+
+    <h2>Listar Dados (READ)</h2>
+    <p>Exemplo de como listar dados de tabelas específicas:</p>
+    <code>
+def listar_usuarios():
+    usuarios = TinyDB('dados.json').table('usuarios')
+    print("Usuários cadastrados:")
+    for usuario in usuarios.all():
+        print(usuario)
+
+def listar_produtos():
+    produtos = TinyDB('dados.json').table('produtos')
+    print("Produtos cadastrados:")
+    for produto in produtos.all():
+        print(produto)
+
+# Exemplo de uso:
+listar_usuarios()
+listar_produtos()
+    </code>
+
+    <h2>Atualizar Dados (UPDATE)</h2>
+    <p>Exemplo de como atualizar dados em diferentes tabelas:</p>
+    <code>
+from tinydb import Query
+
+def atualizar_usuario(nome, nova_idade):
+    usuarios = TinyDB('dados.json').table('usuarios')
+    query = Query()
+    usuarios.update({'idade': nova_idade}, query.nome == nome)
+    print(f"Usuário {nome} atualizado com sucesso!")
+
+def atualizar_produto(nome, novo_preco):
+    produtos = TinyDB('dados.json').table('produtos')
+    query = Query()
+    produtos.update({'preco': novo_preco}, query.nome == nome)
+    print(f"Produto {nome} atualizado com sucesso!")
+
+# Exemplo de uso:
+atualizar_usuario("Max", 31)
+atualizar_produto("Notebook", 2600)
+    </code>
+
+    <h2>Excluir Dados (DELETE)</h2>
+    <p>Exemplo de como excluir dados de diferentes tabelas:</p>
+    <code>
+def deletar_usuario(nome):
+    usuarios = TinyDB('dados.json').table('usuarios')
+    query = Query()
+    usuarios.remove(query.nome == nome)
+    print(f"Usuário {nome} removido com sucesso!")
+
+def deletar_produto(nome):
+    produtos = TinyDB('dados.json').table('produtos')
+    query = Query()
+    produtos.remove(query.nome == nome)
+    print(f"Produto {nome} removido com sucesso!")
+
+# Exemplo de uso:
+deletar_usuario("Max")
+deletar_produto("Notebook")
+    </code>
+</body>
+</html>
