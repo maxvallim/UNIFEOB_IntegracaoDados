@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Python MongoDB</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        h1, h2, h3 {
+            color: #222;
+        }
+        
+        h1 {
+            border-bottom: 2px solid #222;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            margin-top: 30px;
+            border-left: 4px solid #222;
+            padding-left: 10px;
+        }
+        
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid #222;
+        }
+        
+        .note {
+            background-color: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 3px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <h1>Operações CRUD com Python e MongoDB</h1>
+    
+    <p>Este guia explica como realizar operações básicas de CRUD (Create, Read, Update, Delete) em bancos de dados MongoDB utilizando Python com o driver PyMongo.</p>
+    
+    <div class="note">
+        <strong>CRUD</strong> é um acrônimo para as quatro operações básicas de persistência de dados:
+        <ul>
+            <li><strong>C</strong>reate (Criar)</li>
+            <li><strong>R</strong>ead (Ler)</li>
+            <li><strong>U</strong>pdate (Atualizar)</li>
+            <li><strong>D</strong>elete (Excluir)</li>
+        </ul>
+    </div>
+    
+    <h2>Pré-requisitos</h2>
+    
+    <p>Antes de começar, você precisará:</p>
+    
+    <ol>
+        <li>Instalar o driver PyMongo:
+            <pre><code>pip install pymongo</code></pre>
+        </li>
+        <li>Ter uma instância do MongoDB rodando (localmente ou em nuvem)</li>
+    </ol>
+    
+    <h2>1. Conexão com o MongoDB</h2>
+    
+    <p>Primeiro, precisamos estabelecer uma conexão com o banco de dados MongoDB:</p>
+    
+    <pre><code>from pymongo import MongoClient
+
+# Conexão com MongoDB local
+client = MongoClient('mongodb://localhost:27017/')
+
+# Conexão com MongoDB Atlas (nuvem)
+# client = MongoClient('mongodb+srv://usuário:senha@cluster.mongodb.net/nome_do_banco')
+
+# Acessar um banco de dados específico
+db = client['meu_banco']
+
+# Acessar uma coleção específica
+collection = db['minha_colecao']</code></pre>
+    
+    <div class="note">
+        <p><strong>Nota:</strong> No MongoDB, os bancos de dados e coleções são criados automaticamente quando você insere o primeiro documento.</p>
+    </div>
+    
+    <h2>2. Operações CREATE (Inserir)</h2>
+    
+    <h3>Inserir um único documento</h3>
+    
+    <pre><code>documento = {
+    "nome": "João Silva",
+    "idade": 30,
+    "email": "joao@exemplo.com",
+    "interesses": ["programação", "leitura", "esportes"]
+}
+
+resultado = collection.insert_one(documento)
+print(f"Documento inserido com ID: {resultado.inserted_id}")</code></pre>
+    
+    <h3>Inserir múltiplos documentos</h3>
+    
+    <pre><code>documentos = [
+    {"nome": "Maria", "idade": 25, "email": "maria@exemplo.com"},
+    {"nome": "Pedro", "idade": 35, "email": "pedro@exemplo.com"},
+    {"nome": "Ana", "idade": 40, "email": "ana@exemplo.com"}
+]
+
+resultado = collection.insert_many(documentos)
+print(f"IDs dos documentos inseridos: {resultado.inserted_ids}")</code></pre>
+    
+    <h2>3. Operações READ (Consultar)</h2>
+    
+    <h3>Consultar um único documento</h3>
+    
+    <pre><code>documento = collection.find_one({"nome": "João Silva"})
+print(documento)</code></pre>
+    
+    <h3>Consultar todos os documentos</h3>
+    
+    <pre><code>for doc in collection.find():
+    print(doc)</code></pre>
+    
+    <h3>Consultar com filtros</h3>
+    
+    <pre><code># Pessoas com idade maior que 30
+for doc in collection.find({"idade": {"$gt": 30}}):
+    print(doc)</code></pre>
+    
+    <h3>Selecionar campos específicos (projeção)</h3>
+    
+    <pre><code># Apenas nome e email, excluindo o _id
+for doc in collection.find({}, {"nome": 1, "email": 1, "_id": 0}):
+    print(doc)</code></pre>
+    
+    <h3>Contar documentos</h3>
+    
+    <pre><code>total = collection.count_documents({})
+print(f"Total de documentos: {total}")
+
+# Contar com filtro
+maiores_30 = collection.count_documents({"idade": {"$gt": 30}})
+print(f"Pessoas com mais de 30 anos: {maiores_30}")</code></pre>
+    
+    <h2>4. Operações UPDATE (Atualizar)</h2>
+    
+    <h3>Atualizar um documento</h3>
+    
+    <pre><code>resultado = collection.update_one(
+    {"nome": "João Silva"},
+    {"$set": {"idade": 31, "status": "ativo"}}
+)
+print(f"Documentos encontrados: {resultado.matched_count}")
+print(f"Documentos modificados: {resultado.modified_count}")</code></pre>
+    
+    <h3>Atualizar múltiplos documentos</h3>
+    
+    <pre><code># Incrementar a idade de todos com mais de 30 anos
+resultado = collection.update_many(
+    {"idade": {"$gt": 30}},
+    {"$inc": {"idade": 1}}
+)
+print(f"Documentos atualizados: {resultado.modified_count}")</code></pre>
+    
+    <h3>Upsert (inserir se não existir)</h3>
+    
+    <pre><code>resultado = collection.update_one(
+    {"nome": "Carlos"},
+    {"$set": {"nome": "Carlos", "idade": 28, "email": "carlos@exemplo.com"}},
+    upsert=True  # Insere se não encontrar
+)
+print(f"ID do novo documento (se inserido): {resultado.upserted_id}")</code></pre>
+    
+    <h2>5. Operações DELETE (Excluir)</h2>
+    
+    <h3>Excluir um documento</h3>
+    
+    <pre><code>resultado = collection.delete_one({"nome": "João Silva"})
+print(f"Documentos excluídos: {resultado.deleted_count}")</code></pre>
+    
+    <h3>Excluir múltiplos documentos</h3>
+    
+    <pre><code>resultado = collection.delete_many({"idade": {"$gt": 40}})
+print(f"Documentos excluídos: {resultado.deleted_count}")</code></pre>
+    
+    <div class="warning">
+        <p><strong>Cuidado!</strong> O comando abaixo excluirá <strong>TODOS</strong> os documentos da coleção:</p>
+        <pre><code># collection.delete_many({})  # Descomente apenas se tiver certeza!</code></pre>
+    </div>
+    
+    <h2>Operações Avançadas</h2>
+    
+    <h3>Índices</h3>
+    
+    <pre><code># Criar um índice único no campo 'email'
+collection.create_index([("email", pymongo.ASCENDING)], unique=True)
+
+# Listar todos os índices
+for indice in collection.list_indexes():
+    print(indice)</code></pre>
+    
+    <h3>Agregação</h3>
+    
+    <pre><code>pipeline = [
+    {"$match": {"idade": {"$gt": 30}}},  # Filtra documentos
+    {"$group": {"_id": None, "media_idade": {"$avg": "$idade"}}}  # Calcula média
+]
+resultado = list(collection.aggregate(pipeline))
+print(resultado)</code></pre>
+    
+    <h2>Boas Práticas</h2>
+    
+    <ul>
+        <li><strong>Pool de conexões:</strong> Crie o MongoClient uma vez e reutilize</li>
+        <li><strong>Índices:</strong> Crie índices para campos frequentemente consultados</li>
+        <li><strong>Tratamento de erros:</strong> Sempre trate exceções adequadamente</li>
+        <li><strong>Projeções:</strong> Use projeções para limitar os dados retornados</li>
+        <li><strong>Async:</strong> Para aplicações assíncronas, considere usar o Motor</li>
+    </ul>
+    
+    <h2>Fechando a Conexão</h2>
+    
+    <pre><code>client.close()</code></pre>
+    
+    <div class="note">
+        <p>Este guia cobre as operações básicas de CRUD com MongoDB e Python. Para aplicações em produção, considere implementar padrões adicionais como repositórios, validação de dados e tratamento robusto de erros.</p>
+    </div>
+</body>
+</html>
