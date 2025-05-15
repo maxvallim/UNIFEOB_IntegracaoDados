@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Firebase com Python</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2, h3 {
+            color: #222;
+        }
+        
+        h1 {
+            border-bottom: 2px solid #222;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            margin-top: 30px;
+            border-left: 4px solid #222;
+            padding-left: 10px;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 3px solid #222;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .note {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .step {
+            margin-bottom: 30px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background-color: #222;
+            color: white;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutorial CRUD no Firebase com Python</h1>
+    
+    <div class="note">
+        <p>Este tutorial mostra como implementar operações CRUD (Create, Read, Update, Delete) no Firebase Firestore usando Python.</p>
+    </div>
+    
+    <div class="step">
+        <h2><span class="step-number">1</span> Pré-requisitos</h2>
+        
+        <p>Antes de começar, você precisará:</p>
+        <ul>
+            <li>Uma conta no Firebase</li>
+            <li>Um projeto Firebase configurado</li>
+            <li>Python instalado (3.6 ou superior)</li>
+        </ul>
+        
+        <h3>Instalando a biblioteca</h3>
+        <pre><code>pip install firebase-admin</code></pre>
+        
+        <h3>Obtendo as credenciais</h3>
+        <p>No console do Firebase:</p>
+        <ol>
+            <li>Acesse "Configurações do projeto"</li>
+            <li>Vá para "Contas de serviço"</li>
+            <li>Gere uma nova chave privada (arquivo JSON)</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h2><span class="step-number">2</span> Configuração Inicial</h2>
+        
+        <p>Crie um arquivo Python e adicione a configuração inicial:</p>
+        
+        <pre><code>import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Inicializa o Firebase
+cred = credentials.Certificate("caminho/para/seu/arquivo-de-chave.json")
+firebase_admin.initialize_app(cred)
+
+# Obtém uma referência para o Firestore
+db = firestore.client()</code></pre>
+        
+        <div class="note">
+            <p><strong>Nota:</strong> Substitua "caminho/para/seu/arquivo-de-chave.json" pelo caminho real do arquivo JSON que você baixou do Firebase.</p>
+        </div>
+    </div>
+    
+    <div class="step">
+        <h2><span class="step-number">3</span> Operações CRUD</h2>
+        
+        <h3>Create (Criar)</h3>
+        <pre><code>def create_document(collection_name, data, document_id=None):
+    if document_id:
+        db.collection(collection_name).document(document_id).set(data)
+    else:
+        db.collection(collection_name).add(data)
+    print("Documento criado com sucesso!")
+
+# Exemplo de uso:
+user_data = {
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "idade": 30
+}
+create_document("usuarios", user_data, "user123")</code></pre>
+        
+        <h3>Read (Ler)</h3>
+        <pre><code>def read_document(collection_name, document_id):
+    doc_ref = db.collection(collection_name).document(document_id)
+    doc = doc_ref.get()
+    if doc.exists:
+        print(f"Dados do documento: {doc.to_dict()}")
+        return doc.to_dict()
+    else:
+        print("Documento não encontrado!")
+        return None
+
+# Ler todos os documentos de uma coleção
+def read_all_documents(collection_name):
+    docs = db.collection(collection_name).stream()
+    for doc in docs:
+        print(f"{doc.id} => {doc.to_dict()}")
+
+# Exemplo de uso:
+read_document("usuarios", "user123")
+read_all_documents("usuarios")</code></pre>
+        
+        <h3>Update (Atualizar)</h3>
+        <pre><code>def update_document(collection_name, document_id, updates):
+    doc_ref = db.collection(collection_name).document(document_id)
+    doc_ref.update(updates)
+    print("Documento atualizado com sucesso!")
+
+# Exemplo de uso:
+update_data = {
+    "idade": 31,
+    "profissao": "Engenheiro"
+}
+update_document("usuarios", "user123", update_data)</code></pre>
+        
+        <h3>Delete (Deletar)</h3>
+        <pre><code>def delete_document(collection_name, document_id):
+    db.collection(collection_name).document(document_id).delete()
+    print("Documento deletado com sucesso!")
+
+# Exemplo de uso:
+delete_document("usuarios", "user123")</code></pre>
+    </div>
+    
+    <div class="step">
+        <h2><span class="step-number">4</span> Operações Avançadas</h2>
+        
+        <h3>Consultas com filtros</h3>
+        <pre><code>def query_documents(collection_name, field, operator, value):
+    docs = db.collection(collection_name).where(field, operator, value).stream()
+    for doc in docs:
+        print(f"{doc.id} => {doc.to_dict()}")
+
+# Exemplo de uso (usuários com idade > 25):
+query_documents("usuarios", "idade", ">", 25)</code></pre>
+        
+        <h3>Transações</h3>
+        <pre><code>@firestore.transactional
+def transfer_points(transaction, from_user, to_user, points):
+    from_ref = db.collection("usuarios").document(from_user)
+    to_ref = db.collection("usuarios").document(to_user)
+    
+    from_snapshot = from_ref.get(transaction=transaction)
+    to_snapshot = to_ref.get(transaction=transaction)
+    
+    new_from_points = from_snapshot.get("pontos") - points
+    new_to_points = to_snapshot.get("pontos") + points
+    
+    transaction.update(from_ref, {"pontos": new_from_points})
+    transaction.update(to_ref, {"pontos": new_to_points})
+
+# Exemplo de uso:
+transaction = db.transaction()
+transfer_points(transaction, "user1", "user2", 50)</code></pre>
+    </div>
+    
+    <div class="step">
+        <h2><span class="step-number">5</span> Dicas Finais</h2>
+        
+        <ul>
+            <li>Sempre trate erros com blocos try-except</li>
+            <li>Para ambientes de produção, use variáveis de ambiente para armazenar credenciais</li>
+            <li>O Firestore tem limites de taxa e quotas - planeje seu uso adequadamente</li>
+            <li>Considere usar estruturas de dados aninhadas para relacionamentos complexos</li>
+            <li>Para aplicações em tempo real, explore os listeners do Firestore</li>
+        </ul>
+    </div>
+    
+    <div class="note">
+        <p>Este tutorial cobre o básico das operações CRUD com Firebase e Python. Explore a <a href="https://firebase.google.com/docs/firestore" target="_blank">documentação oficial</a> para recursos mais avançados.</p>
+    </div>
+</body>
+</html>
