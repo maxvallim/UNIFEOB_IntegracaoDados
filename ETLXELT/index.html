@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL x ELT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ETL x ELT</h1>
+
+    <p>
+        ETL (Extract, Transform, Load) e ELT (Extract, Load, Transform) são duas abordagens amplamente utilizadas
+        na integração e preparação de dados para análise e tomada de decisão. Ambas possuem o mesmo objetivo:
+        consolidar dados provenientes de diferentes fontes, porém diferem na ordem em que as etapas são executadas.
+    </p>
+
+    <p>
+        <strong>ETL (Extract, Transform, Load):</strong> Nesse modelo, os dados são inicialmente extraídos das
+        fontes de origem, depois passam por um processo de transformação e limpeza em uma área intermediária,
+        e somente após esse tratamento são carregados no banco de dados ou data warehouse de destino.
+        Essa abordagem é tradicional e muito utilizada quando há necessidade de validar e padronizar os dados
+        antes de armazená-los.
+    </p>
+
+    <p>
+        <strong>ELT (Extract, Load, Transform):</strong> Nesse modelo, os dados são extraídos e carregados
+        diretamente no sistema de destino. As transformações ocorrem posteriormente, aproveitando a capacidade
+        de processamento do próprio banco de dados ou plataforma analítica. Essa abordagem é bastante utilizada
+        em ambientes modernos de Big Data e Data Warehouses em nuvem, onde o poder computacional permite processar
+        grandes volumes de dados de forma eficiente.
+    </p>
+
+    <p>
+        <strong>Principais diferenças:</strong>
+    </p>
+
+    <ul>
+        <li><strong>ETL:</strong> transforma antes de carregar.</li>
+        <li><strong>ELT:</strong> carrega antes de transformar.</li>
+        <li><strong>ETL:</strong> reduz o volume de dados enviados ao destino.</li>
+        <li><strong>ELT:</strong> mantém os dados brutos disponíveis para novas análises.</li>
+        <li><strong>ETL:</strong> ideal para ambientes tradicionais.</li>
+        <li><strong>ELT:</strong> ideal para plataformas modernas de análise de dados e computação em nuvem.</li>
+    </ul>
+
+    <p>
+        Nesta atividade serão utilizados os arquivos de dados:
+        <a href="produtos.csv">produtos.csv</a>,
+        <a href="NCM.csv">NCM.csv</a> e
+        <a href="vendas.csv">vendas.csv</a> .
+    </p>
+
+    <p>
+        Também serão disponibilizados os scripts de importação:
+        <a href="importa1.py">importa1.py</a> e
+        <a href="importa2.py">importa2.py</a>.
+    </p>
+
+
+</body>
+</html>
