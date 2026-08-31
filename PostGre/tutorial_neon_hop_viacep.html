@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integração de Dados com Neon, Apache Hop e ViaCEP</title>
+<style>
+body{font-family:Arial,sans-serif;line-height:1.6;margin:20px;background:#f4f4f4;}
+h1{color:#333;text-align:center;}
+h2{color:#333;}
+pre{background:#333;color:#fff;padding:10px;border-radius:8px;overflow-x:auto;}
+p,ul{background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.1);}
+</style>
+</head>
+<body>
+<h1>Integração de Dados com PostgreSQL (Neon), Apache Hop e API ViaCEP</h1>
+<p>
+Nesta atividade será desenvolvido um processo completo de Integração de Dados utilizando PostgreSQL hospedado no Neon, Apache Hop e a API pública ViaCEP. O objetivo é demonstrar um cenário real no qual uma empresa possui apenas o CEP cadastrado de seus clientes e necessita enriquecer seus dados consultando automaticamente uma API externa. Ao final do processo, os endereços serão gravados em uma tabela específica no banco de dados.
+</p>
+<p>
+Fluxo da solução:<br><br>
+CLIENTE (PostgreSQL)<br>
+↓<br>
+Apache Hop<br>
+↓<br>
+API ViaCEP<br>
+↓<br>
+JSON<br>
+↓<br>
+ENDERECO (PostgreSQL)
+</p>
+<h2>Parte 1 - Preparação do Banco de Dados</h2>
+<pre>
+CREATE TABLE cliente (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    cep VARCHAR(8)
+);
+
+CREATE TABLE endereco (
+    id SERIAL PRIMARY KEY,
+    id_cliente INTEGER,
+    cep VARCHAR(8),
+    logradouro VARCHAR(200),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    uf CHAR(2)
+);
+
+CREATE TABLE log_erros (
+    id SERIAL PRIMARY KEY,
+    cep VARCHAR(8),
+    motivo VARCHAR(200),
+    data_erro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+</pre>
+<h2>Inserção dos Dados</h2>
+<pre>
+INSERT INTO cliente (nome, cep)
+VALUES
+('João','01001000'),
+('Maria','13010000'),
+('Pedro','20040002'),
+('Ana','13870000'),
+('Cliente Inválido','99999999');
+</pre>
+<h2>Conferência</h2>
+<pre>
+SELECT *
+FROM cliente;
+</pre>
+<h2>Parte 2 - Construindo o Pipeline no Apache Hop</h2>
+<p>
+Estrutura final do pipeline:
+</p>
+<pre>
+Table Input
+      ↓
+REST Client
+      ↓
+JSON Input
+      ↓
+Table Output
+</pre>
+<h2>Passo 1 - Table Input</h2>
+<pre>
+SELECT
+    id,
+    nome,
+    cep
+FROM cliente;
+</pre>
+<p>
+Criar uma conexão com o banco Neon e configurar um Table Input para ler os clientes.
+</p>
+<h2>Passo 2 - REST Client</h2>
+<p>
+Adicionar o transform REST Client e conectá-lo ao Table Input.
+</p>
+<pre>
+URL Base
+https://viacep.com.br/ws/
+</pre>
+<p>
+Criar os campos de saída <b>response</b> e <b>status</b>. O campo response armazenará o JSON retornado pela API.
+</p>
+<h2>Passo 3 - JSON Input</h2>
+<p>
+Configurar o JSON Input marcando:
+</p>
+<pre>
+Source is a field
+Field: response
+</pre>
+<p>
+Cadastrar os seguintes campos:
+</p>
+<pre>
+cep_1        → cep
+logradouro   → logradouro
+bairro       → bairro
+localidade   → localidade
+uf           → uf
+ibge         → ibge
+</pre>
+<p>
+Marcar também:
+</p>
+<pre>
+Ignore missing path
+Default path leaf to null
+</pre>
+<h2>Passo 4 - Ajuste da Tabela Endereco</h2>
+<pre>
+ALTER TABLE endereco
+ALTER COLUMN cep TYPE varchar(9);
+</pre>
+<p>
+O ViaCEP retorna o CEP com hífen, exigindo nove caracteres.
+</p>
+<h2>Passo 5 - Table Output</h2>
+<p>
+Selecionar a conexão Neon e configurar:
+</p>
+<pre>
+Target schema : public
+Target table  : endereco
+</pre>
+<p>
+Marcar a opção:
+</p>
+<pre>
+Specify database fields
+</pre>
+<p>
+Mapeamento dos campos:
+</p>
+<pre>
+id_cliente   ← id
+cep          ← cep_1
+logradouro   ← logradouro
+bairro       ← bairro
+cidade       ← localidade
+uf           ← uf
+</pre>
+<p>
+Não mapear o campo id da tabela endereco. Como a coluna foi criada com SERIAL, o PostgreSQL utiliza automaticamente:
+</p>
+<pre>
+nextval('endereco_id_seq')
+</pre>
+<p>
+para gerar a chave primária.
+</p>
+<h2>Passo 6 - Executar o Pipeline</h2>
+<p>
+Executar o pipeline completo. O Apache Hop irá consultar a API ViaCEP, interpretar o JSON recebido e gravar os endereços na tabela endereco.
+</p>
+<h2>Conferência Final</h2>
+<pre>
+SELECT *
+FROM endereco;
+</pre>
+<p>
+Ao final da atividade os alunos terão construído um processo completo de ETL utilizando PostgreSQL, Neon, Apache Hop, API REST, JSON e carga automatizada de dados, reproduzindo um cenário comum encontrado em projetos reais de Integração de Dados.
+</p>
+</body>
+</html>
