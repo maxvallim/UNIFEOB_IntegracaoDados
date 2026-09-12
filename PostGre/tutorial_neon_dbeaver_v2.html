@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon e DBeaver</title>
+<style>
+body{font-family:Arial,sans-serif;line-height:1.6;margin:20px;background:#f4f4f4;}
+h1{color:#333;text-align:center;}
+h2{color:#333;}
+pre{background:#333;color:#fff;padding:10px;border-radius:8px;overflow-x:auto;}
+p,ul{background:#fff;padding:20px;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.1);}
+</style>
+</head>
+<body>
+<h1>Criação de Conta no Neon e Conexão com PostgreSQL pelo DBeaver</h1>
+
+<p>Este tutorial apresenta a criação de uma conta no Neon, a criação de um banco PostgreSQL em nuvem e a configuração da conexão pelo DBeaver.</p>
+
+<h2>Parte 1 - Criando a Conta</h2>
+<pre>https://neon.com</pre>
+<p>Clique em Sign Up e crie sua conta.</p>
+
+<h2>Parte 2 - Criando o Projeto</h2>
+<pre>Create Project</pre>
+<p>Crie um projeto e anote os dados de conexão.</p>
+
+<h2>Parte 3 - Entendendo a String de Conexão</h2>
+<p>O Neon fornece uma URL semelhante a:</p>
+<pre>postgresql://neondb_owner:SENHA@ep-exemplo.sa-east-1.aws.neon.tech/neondb?sslmode=require</pre>
+
+<p>Muitos alunos cometem o erro de copiar toda essa informação para o campo <b>Host</b> do DBeaver. Isso está incorreto.</p>
+
+<p>A URL é composta pelas seguintes partes:</p>
+<pre>
+postgresql://          -> protocolo
+neondb_owner           -> usuário
+SENHA                  -> senha
+ep-exemplo...tech      -> host
+neondb                 -> banco de dados
+sslmode=require        -> parâmetro SSL
+</pre>
+
+<h2>Parte 4 - Configuração Correta no DBeaver</h2>
+
+<p>Ao utilizar a opção Host, cada informação deve ser colocada em seu respectivo campo.</p>
+
+<pre>
+Host:
+ep-exemplo.sa-east-1.aws.neon.tech
+
+Porta:
+5432
+
+Banco de dados:
+neondb
+
+Usuário:
+neondb_owner
+
+Senha:
+(senha fornecida pelo Neon)
+</pre>
+
+<p><b>Não coloque a URL completa no campo Host.</b></p>
+
+<p>Exemplo INCORRETO:</p>
+<pre>
+neondb_owner:senha@ep-exemplo.aws.neon.tech/neondb?sslmode=require
+</pre>
+
+<p>Exemplo CORRETO:</p>
+<pre>
+ep-exemplo.aws.neon.tech
+</pre>
+
+<h2>Parte 5 - Configuração SSL</h2>
+
+<p>Na aba SSL configure:</p>
+
+<pre>
+Modo SSL:
+require
+</pre>
+
+<p>Deixe vazios os campos:</p>
+
+<pre>
+Certificado CA
+Certificado de cliente
+Chave privada de cliente
+</pre>
+
+<h2>Parte 6 - Testando a Conexão</h2>
+
+<pre>Testar conexão</pre>
+
+<p>Se todos os dados estiverem corretos o DBeaver exibirá uma mensagem de sucesso.</p>
+
+<h2>Dica do Professor</h2>
+
+<p>Os erros mais comuns são:</p>
+<ul>
+<li>Informar a URL completa no campo Host.</li>
+<li>Utilizar o banco postgres quando o banco criado é neondb.</li>
+<li>Informar usuário diferente do fornecido pelo Neon.</li>
+<li>Não configurar SSL como require.</li>
+</ul>
+
+<p>Se ocorrer erro, confira primeiro Host, Banco, Usuário e SSL.</p>
+
+</body>
+</html>
