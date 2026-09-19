@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MongoDB + API REST + Postman</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;padding:0;background:#fff;color:#000}
+header{background:#000;color:#fff;padding:15px;text-align:center}
+section{margin:20px;padding:20px;border:1px solid #000;border-radius:8px;background:#f8f8f8}
+h2{border-bottom:2px solid #000;padding-bottom:5px}
+code{background:#e8e8e8;padding:2px 5px;border-radius:4px}
+pre{background:#e8e8e8;padding:10px;border-radius:6px;overflow-x:auto;font-family:Consolas,monospace}
+li{margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+<h1>MongoDB + API REST + Postman</h1>
+<p>Construindo uma API REST com Python, FastAPI, MongoDB Atlas e Postman.</p>
+</header>
+
+<section><h2>1. Objetivo da Aula</h2>
+<ul>
+<li>Entender APIs REST.</li>
+<li>Conectar Python ao MongoDB Atlas.</li>
+<li>Criar operações CRUD.</li>
+<li>Testar endpoints com Postman.</li>
+<li>Preparar o terreno para integração com Apache Hop.</li>
+</ul></section>
+
+<section><h2>2. Arquitetura</h2>
+<pre>Postman
+   |
+ HTTP
+   |
+FastAPI
+   |
+MongoDB Atlas</pre>
+</section>
+
+<section><h2>3. Instalação</h2>
+<pre>pip install fastapi uvicorn pymongo</pre>
+</section>
+
+<section><h2>4. Estrutura do Projeto</h2>
+<pre>api-mongo/
+│
+├── main.py
+└── requirements.txt</pre>
+</section>
+
+<section><h2>5. Conexão com MongoDB</h2>
+<pre>from pymongo import MongoClient
+
+client = MongoClient(
+    "mongodb+srv://USUARIO:SENHA@cluster.mongodb.net/"
+)
+
+db = client["ecommerce"]
+clientes = db["clientes"]</pre>
+</section>
+
+<section><h2>6. Criando a Aplicação</h2>
+<pre>from fastapi import FastAPI
+
+app = FastAPI()</pre>
+</section>
+
+<section><h2>7. Código Completo do main.py</h2>
+<pre>from fastapi import FastAPI
+from pymongo import MongoClient
+from bson import ObjectId
+
+app = FastAPI()
+
+client = MongoClient(
+    "mongodb+srv://USUARIO:SENHA@cluster.mongodb.net/"
+)
+
+db = client["ecommerce"]
+clientes = db["clientes"]
+
+@app.get("/clientes")
+def listar_clientes():
+
+    dados = []
+
+    for c in clientes.find():
+        c["_id"] = str(c["_id"])
+        dados.append(c)
+
+    return dados
+
+
+@app.get("/clientes/id/{id}")
+def buscar_cliente(id: str):
+
+    cliente = clientes.find_one(
+        {"_id": ObjectId(id)}
+    )
+
+    if cliente:
+        cliente["_id"] = str(cliente["_id"])
+        return cliente
+
+    return {"erro": "Cliente não encontrado"}
+
+
+@app.get("/clientes/cidade/{cidade}")
+def buscar_por_cidade(cidade: str):
+
+    dados = []
+
+    for c in clientes.find({"cidade": cidade}):
+        c["_id"] = str(c["_id"])
+        dados.append(c)
+
+    return dados
+
+
+@app.post("/clientes")
+def inserir_cliente(cliente: dict):
+
+    resultado = clientes.insert_one(cliente)
+
+    return {
+        "mensagem": "Cliente inserido",
+        "id": str(resultado.inserted_id)
+    }
+
+
+@app.put("/clientes/{id}")
+def atualizar_cliente(id: str, cliente: dict):
+
+    resultado = clientes.update_one(
+        {"_id": ObjectId(id)},
+        {"$set": cliente}
+    )
+
+    return {
+        "registros": resultado.modified_count
+    }
+
+
+@app.delete("/clientes/{id}")
+def excluir_cliente(id: str):
+
+    resultado = clientes.delete_one(
+        {"_id": ObjectId(id)}
+    )
+
+    return {
+        "registros": resultado.deleted_count
+    }</pre>
+</section>
+
+<section><h2>8. Executando a API</h2>
+<pre>uvicorn main:app --reload</pre>
+</section>
+
+<section><h2>9. Swagger Automático</h2>
+<pre>http://localhost:8000/docs</pre>
+</section>
+
+<section><h2>10. GET - Listar Clientes</h2>
+<pre>GET
+http://localhost:8000/clientes</pre>
+</section>
+
+<section><h2>11. GET - Buscar por Cidade</h2>
+<pre>GET
+http://localhost:8000/clientes/cidade/Natal</pre>
+<p>Equivalente MongoDB:</p>
+<pre>db.clientes.find({
+   cidade: "Natal"
+})</pre>
+</section>
+
+<section><h2>12. POST - Inserir Cliente</h2>
+<pre>POST
+http://localhost:8000/clientes</pre>
+<pre>{
+  "nome": "Max Vallim",
+  "cidade": "Natal",
+  "idade": 45
+}</pre>
+</section>
+
+<section><h2>13. PUT - Atualizar Cliente</h2>
+<pre>PUT
+http://localhost:8000/clientes/ID_AQUI</pre>
+<pre>{
+  "idade": 46
+}</pre>
+</section>
+
+<section><h2>14. DELETE - Excluir Cliente</h2>
+<pre>DELETE
+http://localhost:8000/clientes/ID_AQUI</pre>
+</section>
+
+<section><h2>15. Relação MongoDB x REST</h2>
+<pre>find()        -> GET
+insertOne()   -> POST
+updateOne()   -> PUT
+deleteOne()   -> DELETE</pre>
+</section>
+
+<section><h2>16. Demonstração em Sala</h2>
+<ol>
+<li>Abrir MongoDB Compass.</li>
+<li>Exibir a coleção clientes.</li>
+<li>Executar um POST no Postman.</li>
+<li>Atualizar a coleção no Compass.</li>
+<li>Mostrar o novo documento surgindo em tempo real.</li>
+</ol>
+</section>
+
+<section><h2>17. Exercícios</h2>
+<ol>
+<li>Criar endpoint para maiores de 18 anos.</li>
+<li>Criar endpoint para ordenar por nome.</li>
+<li>Criar endpoint para contar clientes.</li>
+<li>Criar endpoint com paginação.</li>
+<li>Criar endpoint filtrando por cidade e idade.</li>
+</ol>
+</section>
+
+<section><h2>18. Conclusão</h2>
+<p>Agora a aplicação já permite consumir dados do MongoDB via HTTP. O próximo passo será automatizar cargas utilizando Apache Hop.</p>
+</section>
+</body>
+</html>
