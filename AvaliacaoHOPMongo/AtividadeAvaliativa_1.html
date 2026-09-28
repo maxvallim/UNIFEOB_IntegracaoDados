@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividade Avaliativa - Integração PostgreSQL, Apache Hop e MongoDB</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    margin:0;
+    padding:20px;
+    line-height:1.6;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+}
+
+h2{
+    color:#333;
+    border-bottom:2px solid #ddd;
+    padding-bottom:5px;
+}
+
+h3{
+    color:#555;
+}
+
+pre{
+    background:#222;
+    color:#fff;
+    padding:12px;
+    border-radius:6px;
+    overflow-x:auto;
+}
+
+code{
+    font-family: Consolas, monospace;
+}
+
+.dica{
+    background:#fff8c4;
+    border-left:5px solid #f0b400;
+    padding:12px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.importante{
+    background:#e3f2fd;
+    border-left:5px solid #1976d2;
+    padding:12px;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.pontos{
+    text-align:center;
+}
+
+.avaliacao{
+    background:#e8f5e9;
+    border-left:5px solid #2e7d32;
+    padding:12px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+table th,
+table td{
+    border:1px solid #ddd;
+    padding:10px;
+}
+
+table th{
+    background:#f2f2f2;
+}
+
+a{
+    text-decoration:none;
+    color:#1565c0;
+    font-weight:bold;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+hr{
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Atividade Avaliativa - Integração de Dados</h1>
+
+<p>
+Nesta atividade você realizará um processo completo de integração de dados utilizando PostgreSQL, Apache Hop e MongoDB.
+</p>
+
+<p>
+O objetivo é transformar registros de um banco relacional em documentos JSON e armazená-los em uma coleção MongoDB.
+</p>
+
+<hr>
+
+<h2>Objetivo</h2>
+
+<p>
+Uma empresa possui um sistema transacional armazenado em PostgreSQL contendo informações de clientes, produtos, vendas e itens de venda.
+</p>
+
+<p>
+Seu trabalho será gerar documentos JSON representando cada venda e realizar a carga desses documentos para um banco MongoDB utilizando Apache Hop.
+</p>
+
+<hr>
+
+<h2>Arquivos Disponíveis</h2>
+
+<p>
+Faça download dos arquivos abaixo antes de iniciar:
+</p>
+
+<ul>
+
+<li>
+
+<b>01_Tabelas_SQL.txt</b><br>
+
+<a href="Tabelas_SQL.txt" download>
+📥 Download - 01_Tabelas_SQL.txt
+</a>
+
+<br><br>
+
+Script para criação das tabelas, relacionamentos e geração automática da massa de dados.
+
+</li>
+
+<br>
+
+<li>
+
+<b>02_SelectJson.txt</b><br>
+
+<a href="SelectJson.txt" download>
+📥 Download - 02_SelectJson.txt
+</a>
+
+<br><br>
+
+Consulta SQL responsável pela geração dos documentos JSON.
+
+</li>
+
+
+</ul>
+
+
+
+
+
+
+
+<hr>
+
+<h2>Parte 1 - Preparação do Banco PostgreSQL</h2>
+
+<ol>
+
+<li>Crie um banco PostgreSQL vazio.</li>
+
+<li>Abra o DBeaver.</li>
+
+<li>Conecte-se ao banco criado.</li>
+
+<li>Execute completamente o arquivo <b>01_Tabelas_SQL.txt</b> (*DICA FORTE - Execute primeiro o scripts de criação das tabelas e depois o de inserção de dados).</li>
+
+<li>Confirme a criação das tabelas.</li>
+
+</ol>
+
+<h3>Tabelas Esperadas</h3>
+
+<ul>
+
+<li>clientes</li>
+
+<li>produtos</li>
+
+<li>vendas</li>
+
+<li>itensVendas</li>
+
+</ul>
+
+<div class="dica">
+
+<strong>Dica:</strong>
+
+Execute os comandos abaixo para validar a carga:
+
+<pre>
+SELECT COUNT(*) FROM clientes;
+
+SELECT COUNT(*) FROM produtos;
+
+SELECT COUNT(*) FROM vendas;
+
+SELECT COUNT(*) FROM itensvendas;
+</pre>
+
+</div>
+
+<hr>
+
+<h2>Parte 2 - Entendendo o Documento JSON (script do arquivo SelectJson.txt) </h2>
+
+<p>
+A consulta SQL fornecida gera documentos JSON semelhantes ao exemplo abaixo:
+</p>
+
+<pre>
+{
+   "_id": 100,
+
+   "dataVenda": "2026-09-25",
+
+   "cliente": {
+      "id": 20,
+      "nome": "Cliente 0020",
+      "cep": "59010-000"
+   },
+
+   "itens": [
+      {
+         "idProduto": 4,
+         "descricao": "Perfume Floral Elegance",
+         "quantidade": 2,
+         "valorUnitario": 129.90,
+         "valorTotal": 259.80
+      }
+   ],
+
+   "totalVenda": 259.80
+}
+</pre>
+
+<div class="dica">
+
+<strong>Observe:</strong>
+
+<ul>
+<li>Uma venda gera um documento.</li>
+<li>O cliente fica armazenado dentro do documento.</li>
+<li>Os itens ficam armazenados em uma lista.</li>
+<li>O total da venda é calculado automaticamente.</li>
+</ul>
+
+</div>
+
+<hr>
+
+<h2>Parte 3 - Testando a Consulta SQL</h2>
+
+<ol>
+
+<li>Abra o arquivo <b>02_SelectJson.txt</b>.</li>
+
+<li>Copie a consulta SQL.</li>
+
+<li>Execute a consulta no PostgreSQL utilizando DBeaver.</li>
+
+<li>Analise os resultados.</li>
+
+</ol>
+
+<div class="dica">
+
+<strong>Dica:</strong>
+
+O resultado deverá apresentar uma coluna chamada:
+
+<pre>
+documento
+</pre>
+
+Essa coluna contém o JSON completo que será enviado para o MongoDB.
+
+</div>
+
+<hr>
+
+<h2>Parte 4 - Construção do Pipeline Apache Hop</h2>
+
+<p>
+Crie um pipeline utilizando a estrutura abaixo:
+</p>
+
+<pre>
+Table Input
+      ↓
+MongoDB Output
+</pre>
+
+<h3>Configuração do Table Input</h3>
+
+<ul>
+
+<li>Criar conexão PostgreSQL.</li>
+
+<li>Testar a conexão.</li>
+
+<li>Inserir a consulta contida em 02_SelectJson.txt.</li>
+
+<li>Executar Preview.</li>
+
+</ul>
+
+<div class="dica">
+
+Se o Preview mostrar uma coluna chamada <b>documento</b>, contendo JSON, essa etapa foi concluída corretamente.
+
+</div>
+
+<h3>Configuração do MongoDB Output</h3>
+
+<ul>
+
+<li>Criar conexão MongoDB.</li>
+
+<li>Informar a Database.</li>
+
+<li>Informar a Collection.</li>
+
+<li>Configurar a gravação dos documentos JSON.</li>
+
+</ul>
+
+<hr>
+
+<h2>Parte 5 - Executando a Integração</h2>
+
+<p>
+Execute o pipeline completo.
+</p>
+
+<p>
+O processo deverá realizar:
+</p>
+
+<ol>
+
+<li>Leitura dos dados do PostgreSQL.</li>
+
+<li>Execução da consulta SQL.</li>
+
+<li>Geração dos documentos JSON.</li>
+
+<li>Carga dos documentos no MongoDB.</li>
+
+</ol>
+
+<hr>
+
+<h2>Parte 6 - Validação</h2>
+
+<p>
+Utilizando MongoDB Compass apresente:
+</p>
+
+<ul>
+
+<li>Database criada.</li>
+
+<li>Collection criada.</li>
+
+<li>Quantidade de documentos inseridos.</li>
+
+<li>Pelo menos três documentos armazenados.</li>
+
+</ul>
+
+<div class="dica">
+
+Compare um documento armazenado no MongoDB com os dados existentes no PostgreSQL.
+
+</div>
+
+<hr>
+
+<h2>Questões Teóricas</h2>
+
+<ol>
+
+<li>
+Qual é a função do comando <b>json_build_object()</b>?
+</li>
+
+<li>
+Qual é a função do comando <b>json_agg()</b>?
+</li>
+
+<li>
+Por que a consulta utiliza <b>GROUP BY</b>?
+</li>
+
+<li>
+Qual a vantagem de gerar documentos JSON diretamente no PostgreSQL?
+</li>
+
+<li>
+Explique o fluxo completo da integração realizada nesta atividade.
+</li>
+
+</ol>
+
+<hr>
+
+<h2>Entrega</h2>
+
+<p>
+Entregar um único PDF contendo:
+</p>
+
+<ul>
+
+<li>Print da execução do script PostgreSQL.</li>
+
+<li>Print do resultado do SelectJson.</li>
+
+<li>Print do Pipeline Apache Hop.</li>
+
+<li>Print da execução do Pipeline.</li>
+
+<li>Print do MongoDB Compass mostrando os documentos carregados.</li>
+
+<li>Resposta das questões teóricas.</li>
+
+</ul>
+
+<hr>
+
+<div class="avaliacao">
+
+<h2>Critérios de Avaliação</h2>
+
+<table>
+
+<tr>
+<th>Critério</th>
+<th class="centro">Pontuação</th>
+</tr>
+
+<tr>
+<td>Preparação do Banco PostgreSQL</td>
+<td class="pontos">2,0</td>
+</tr>
+
+<tr>
+<td>Execução e compreensão da consulta SQL</td>
+<td class="pontos">2,0</td>
+</tr>
+
+<tr>
+<td>Configuração do Apache Hop</td>
+<td class="pontos">2,0</td>
+</tr>
+
+<tr>
+<td>Carga dos documentos no MongoDB</td>
+<td class="pontos">2,0</td>
+</tr>
+
+<tr>
+<td>Questões Teóricas e Organização da Entrega</td>
+<td class="pontos">2,0</td>
+</tr>
+
+<tr>
+<th>Total</th>
+<th class="pontos">10,0</th>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

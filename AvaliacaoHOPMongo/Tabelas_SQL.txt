@@ -1,0 +1,171 @@
+
+-- CRIAÇÃO DAS TABELAS
+
+CREATE TABLE clientes (
+    idClientes SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cep CHAR(9) NOT NULL
+);
+
+CREATE TABLE produtos (
+    idProdutos SERIAL PRIMARY KEY,
+    descricao VARCHAR(100) NOT NULL,
+    unidade CHAR(2) NOT NULL,
+    valorUnitario NUMERIC(10,2) NOT NULL
+);
+
+CREATE TABLE vendas (
+    idVendas SERIAL PRIMARY KEY,
+    dataVenda DATE NOT NULL,
+    idClientes INTEGER NOT NULL,
+    CONSTRAINT fk_vendas_clientes
+        FOREIGN KEY (idClientes)
+        REFERENCES clientes(idClientes)
+);
+
+CREATE TABLE itensVendas (
+    idItensVendas SERIAL PRIMARY KEY,
+    quantidade NUMERIC(10,2) NOT NULL,
+    valorUnitario NUMERIC(10,2) NOT NULL,
+    valorTotal NUMERIC(10,2) NOT NULL,
+    idVendas INTEGER NOT NULL,
+    idProdutos INTEGER NOT NULL,
+
+    CONSTRAINT fk_itens_vendas
+        FOREIGN KEY (idVendas)
+        REFERENCES vendas(idVendas),
+
+    CONSTRAINT fk_itens_produtos
+        FOREIGN KEY (idProdutos)
+        REFERENCES produtos(idProdutos)
+);
+
+-- INSERÇÃO DE DADOS
+
+-- PRODUTOS
+
+INSERT INTO produtos
+(descricao, unidade, valorUnitario)
+VALUES
+('Deo Colonia Lavanda', 'UN', 49.90),
+('Deo Colonia Citrus', 'UN', 54.90),
+('Deo Colonia Masculina Black', 'UN', 89.90),
+('Perfume Floral Elegance', 'UN', 129.90),
+('Perfume Intense Night', 'UN', 149.90),
+('Shampoo Nutritivo 300ml', 'UN', 24.90),
+('Shampoo Anticaspa 300ml', 'UN', 29.90),
+('Condicionador Nutritivo 300ml', 'UN', 26.90),
+('Sabonete Cremoso Baunilha', 'UN', 5.90),
+('Sabonete Cremoso Coco', 'UN', 5.90),
+('Kit Sabonetes Sortidos', 'UN', 19.90),
+('Creme de Barbear Premium', 'UN', 21.90),
+('Loção Pós Barba', 'UN', 29.90),
+('Desodorante Aerosol Fresh', 'UN', 15.90),
+('Desodorante Aerosol Active', 'UN', 16.90),
+('Hidratante Corporal 200ml', 'UN', 27.90),
+('Hidratante Corporal 400ml', 'UN', 42.90),
+('Óleo Corporal Relaxante', 'UN', 34.90),
+('Protetor Labial', 'UN', 9.90),
+('Kit Presente Perfumaria', 'UN', 99.90);
+
+-- CLIENTES
+
+INSERT INTO clientes (nome, cep)
+SELECT
+    'Cliente ' || LPAD(gs::text,4,'0'),
+
+    CASE (gs % 20)
+
+        WHEN 0 THEN '01001-000'
+        WHEN 1 THEN '01310-100'
+        WHEN 2 THEN '20040-002'
+        WHEN 3 THEN '30130-110'
+        WHEN 4 THEN '40015-000'
+        WHEN 5 THEN '50030-230'
+        WHEN 6 THEN '60060-080'
+        WHEN 7 THEN '69005-040'
+        WHEN 8 THEN '70040-010'
+        WHEN 9 THEN '74003-010'
+        WHEN 10 THEN '80010-000'
+        WHEN 11 THEN '88010-400'
+        WHEN 12 THEN '90010-150'
+        WHEN 13 THEN '59010-000'
+        WHEN 14 THEN '58010-000'
+        WHEN 15 THEN '66010-000'
+        WHEN 16 THEN '64000-270'
+        WHEN 17 THEN '76801-000'
+        WHEN 18 THEN '69900-070'
+        ELSE '57020-000'
+
+    END
+
+FROM generate_series(1,200) gs;
+
+-- VENDAS
+
+INSERT INTO vendas
+(
+    dataVenda,
+    idClientes
+)
+SELECT
+    CURRENT_DATE - (random() * 365)::INTEGER,
+    (random() * 199 + 1)::INTEGER
+FROM generate_series(1,500);
+
+
+-- ITENS VENDAS
+
+DO $$
+DECLARE
+    vVenda INTEGER;
+    vQtdItens INTEGER;
+    vProduto INTEGER;
+    vQtd NUMERIC;
+    vValor NUMERIC;
+BEGIN
+
+    FOR vVenda IN
+        SELECT idvendas
+        FROM vendas
+    LOOP
+
+        vQtdItens := floor(random() * 5 + 1);
+
+        FOR i IN 1..vQtdItens
+        LOOP
+
+            SELECT
+                idprodutos,
+                valorunitario
+            INTO
+                vProduto,
+                vValor
+            FROM produtos
+            ORDER BY random()
+            LIMIT 1;
+
+            vQtd := floor(random() * 4 + 1);
+
+            INSERT INTO itensvendas
+            (
+                quantidade,
+                valorunitario,
+                valortotal,
+                idvendas,
+                idprodutos
+            )
+            VALUES
+            (
+                vQtd,
+                vValor,
+                ROUND(vQtd * vValor,2),
+                vVenda,
+                vProduto
+            );
+
+        END LOOP;
+
+    END LOOP;
+
+END $$;

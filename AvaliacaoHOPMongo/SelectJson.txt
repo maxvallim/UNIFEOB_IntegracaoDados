@@ -1,0 +1,50 @@
+SELECT
+json_build_object(
+
+    '_id', v.idvendas,
+
+    'dataVenda', v.datavenda,
+
+    'cliente',
+    json_build_object(
+        'id', c.idclientes,
+        'nome', c.nome,
+        'cep', c.cep
+    ),
+
+    'itens',
+    json_agg(
+        json_build_object(
+            'idProduto', p.idprodutos,
+            'descricao', p.descricao,
+            'quantidade', iv.quantidade,
+            'valorUnitario', iv.valorunitario,
+            'valorTotal', iv.valortotal
+        )
+    ),
+
+    'totalVenda',
+    SUM(iv.valortotal)
+
+) documento
+
+FROM vendas v
+
+JOIN clientes c
+    ON c.idclientes = v.idclientes
+
+JOIN itensvendas iv
+    ON iv.idvendas = v.idvendas
+
+JOIN produtos p
+    ON p.idprodutos = iv.idprodutos
+
+GROUP BY
+    v.idvendas,
+    v.datavenda,
+    c.idclientes,
+    c.nome,
+    c.cep
+
+ORDER BY
+    v.idvendas;
