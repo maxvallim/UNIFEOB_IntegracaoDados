@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Aula de Integração de Dados - Projeto IntegraData</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:40px;
+    line-height:1.6;
+}
+
+h1{
+    color:#003366;
+}
+
+h2{
+    color:#005599;
+    border-bottom:1px solid #ccc;
+    padding-bottom:5px;
+}
+
+code{
+    background:#f4f4f4;
+    padding:2px 4px;
+}
+
+pre{
+    background:#f4f4f4;
+    border:1px solid #ddd;
+    padding:10px;
+    overflow:auto;
+}
+
+.bloco{
+    background:#f8f8f8;
+    border-left:5px solid #005599;
+    padding:15px;
+    margin:15px 0;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Integração de Dados - Projeto IntegraData</h1>
+
+<p>
+Nesta aula construiremos um processo completo de integração de dados utilizando APIs REST
+desenvolvidas em Python. O objetivo é demonstrar como diferentes sistemas podem compartilhar
+informações para consolidar dados de um cliente em uma única base corporativa.
+</p>
+
+<hr>
+
+<h2>Objetivos da Aula</h2>
+
+<ul>
+<li>Compreender os conceitos de integração de dados.</li>
+<li>Utilizar APIs REST para comunicação entre sistemas.</li>
+<li>Consumir dados provenientes de múltiplos bancos de dados.</li>
+<li>Consolidar informações em um banco NoSQL.</li>
+<li>Exportar dados para planilhas Excel.</li>
+</ul>
+
+<hr>
+
+<h2>Cenário Proposto</h2>
+
+<p>
+A empresa <strong>LojaTech</strong> possui suas informações distribuídas em diferentes sistemas:
+</p>
+
+<ul>
+<li>Cadastro de Clientes → SQLite</li>
+<li>Compras → PostgreSQL</li>
+<li>Informações Financeiras → Firebase</li>
+<li>Consolidação dos Dados → MongoDB</li>
+<li>Relatórios → Excel</li>
+</ul>
+
+<p>
+Nossa missão será construir uma sequência de APIs capazes de integrar todas essas fontes.
+</p>
+
+<hr>
+
+<h2>Arquitetura da Solução</h2>
+
+<pre>
+CSV
+ ↓
+API 1 - Entrada
+ ↓
+API 2 - PostgreSQL
+ ↓
+API 3 - SQLite
+ ↓
+API 4 - Firebase
+ ↓
+API 5 - MongoDB
+ ↓
+API 6 - Excel
+</pre>
+
+<hr>
+
+<h2>Parte 1 - Conceitos Fundamentais</h2>
+
+<div class="bloco">
+
+<h3>Tópicos Abordados</h3>
+
+<ul>
+<li>Integração de Dados</li>
+<li>ETL (Extract, Transform, Load)</li>
+<li>APIs REST</li>
+<li>JSON</li>
+<li>Bancos Relacionais</li>
+<li>Bancos NoSQL</li>
+<li>Exportação de Dados</li>
+</ul>
+
+</div>
+
+<hr>
+
+<h2>Parte 2 - Preparação das Bases de Dados</h2>
+
+<h3>SQLite - Cadastro de Clientes</h3>
+
+<pre>
+CREATE TABLE clientes
+(
+    codigo INTEGER PRIMARY KEY,
+    nome TEXT,
+    endereco TEXT,
+    cidade TEXT
+);
+</pre>
+
+<pre>
+INSERT INTO clientes VALUES
+(1,'João Silva','Rua A','Campinas'),
+(2,'Maria Souza','Rua B','São Paulo');
+</pre>
+
+<h3>PostgreSQL - Compras</h3>
+
+<pre>
+CREATE TABLE compras
+(
+    id SERIAL,
+    codigo_cliente INTEGER,
+    data_compra DATE,
+    valor NUMERIC(10,2)
+);
+</pre>
+
+<pre>
+INSERT INTO compras
+(codigo_cliente,data_compra,valor)
+VALUES
+(1,'2026-01-10',1500),
+(1,'2026-03-15',2000),
+(2,'2026-04-01',500);
+</pre>
+
+<h3>Firebase - Dados Financeiros</h3>
+
+<pre>
+
+</pre>
+
+<pre>
+{
+  "1": {
+    "limite": 50000,
+    "saldo": 12000
+  },
+
+  "2": {
+    "limite": 30000,
+    "saldo": 2500
+  }
+}
+</pre>
+
+<h3>MongoDB</h3>
+
+<p>
+Criar a banco e coleção (opcional):
+</p>
+
+<pre>
+banco: integracao_dados  -  coleção: cliente_consolidado
+</pre>
+
+<hr>
+
+<h2>Parte 3 - API 1: Importação de Clientes</h2>
+
+<p>
+A primeira API será responsável por receber um arquivo CSV contendo os códigos dos clientes que deverão ser processados.
+</p>
+
+<h3>Arquivo CSV</h3>
+
+<pre>
+codigo_cliente
+1
+2
+</pre>
+
+<h3>Endpoint</h3>
+
+<pre>
+POST /importar-clientes
+</pre>
+
+<h3>Retorno Esperado</h3>
+
+<pre>
+{
+  "processados": 2
+}
+</pre>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>Upload de Arquivos</li>
+<li>Leitura de CSV</li>
+<li>Validação de Dados</li>
+<li>JSON</li>
+</ul>
+
+<hr>
+
+<h2>Parte 4 - API 2: Consulta de Compras</h2>
+
+<p>
+Esta API acessará o PostgreSQL para recuperar o histórico de compras do cliente.
+</p>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /compras/1
+</pre>
+
+<h3>Exemplo SQL</h3>
+
+<pre>
+SELECT *
+FROM compras
+WHERE codigo_cliente = 1;
+</pre>
+
+<h3>Retorno</h3>
+
+<pre>
+[
+   {
+      "valor":1500
+   },
+   {
+      "valor":2000
+   }
+]
+</pre>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>Conexão PostgreSQL</li>
+<li>Consultas SQL</li>
+<li>Serialização JSON</li>
+</ul>
+
+<hr>
+
+<h2>Parte 5 - API 3: Consulta de Cadastro</h2>
+
+<p>
+Esta API consultará o banco SQLite para recuperar os dados cadastrais do cliente.
+</p>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /cliente/1
+</pre>
+
+<h3>Retorno</h3>
+
+<pre>
+{
+   "nome":"João Silva",
+   "cidade":"Campinas"
+}
+</pre>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>SQLite</li>
+<li>Persistência Local</li>
+<li>Consulta por Chave Primária</li>
+</ul>
+
+<hr>
+
+<h2>Parte 6 - API 4: Consulta Financeira</h2>
+
+<p>
+A API será responsável por consultar as informações financeiras armazenadas no Firebase.
+</p>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /financeiro/1
+</pre>
+
+<h3>Retorno</h3>
+
+<pre>
+{
+   "limite":50000,
+   "saldo":12000
+}
+</pre>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>Banco em Nuvem</li>
+<li>Firebase</li>
+<li>Estruturas JSON</li>
+</ul>
+
+<hr>
+
+<h2>Parte 7 - API de Consolidação</h2>
+
+<p>
+A API central executará todas as consultas e consolidará os dados do cliente.
+</p>
+
+<h3>Fluxo de Execução</h3>
+
+<pre>
+Recebe Cliente
+      ↓
+Consulta Compras
+      ↓
+Consulta Cadastro
+      ↓
+Consulta Financeiro
+      ↓
+Monta Documento JSON
+      ↓
+Envia ao MongoDB
+</pre>
+
+<h3>Endpoint</h3>
+
+<pre>
+POST /consolidar/1
+</pre>
+
+<h3>Documento Gerado</h3>
+
+<pre>
+{
+  "cliente":{
+      "codigo":1,
+      "nome":"João Silva",
+      "cidade":"Campinas"
+  },
+
+  "compras":[
+      {
+          "valor":1500
+      },
+      {
+          "valor":2000
+      }
+  ],
+
+  "financeiro":{
+      "limite":50000,
+      "saldo":12000
+  }
+}
+</pre>
+
+<hr>
+
+<h2>Parte 8 - API 5: Armazenamento no MongoDB</h2>
+
+<p>
+Após a consolidação, o documento será persistido em uma coleção MongoDB.
+</p>
+
+<h3>Objetivos</h3>
+
+<ul>
+<li>Compreender bancos NoSQL.</li>
+<li>Armazenar documentos JSON.</li>
+<li>Centralizar informações integradas.</li>
+</ul>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>MongoDB</li>
+<li>Coleções</li>
+<li>Documentos</li>
+<li>NoSQL</li>
+</ul>
+
+<hr>
+
+<h2>Parte 9 - API 6: Exportação para Excel</h2>
+
+<p>
+Os dados armazenados no MongoDB serão exportados para uma planilha Excel.
+</p>
+
+<h3>Arquivo Gerado</h3>
+
+<pre>
+clientes_consolidados.xlsx
+</pre>
+
+<h3>Estrutura da Planilha</h3>
+
+<pre>
+Cliente      Cidade      Pedido      Valor      Limite      Saldo
+João Silva   Campinas    5001        2500       50000       12000
+</pre>
+
+<h3>Conceitos Trabalhados</h3>
+
+<ul>
+<li>Pandas</li>
+<li>DataFrame</li>
+<li>Geração de Relatórios</li>
+<li>Exportação Excel</li>
+</ul>
+
+<hr>
+
+<h2>Exercício Prático</h2>
+
+<p>
+Desenvolver uma API que apresente um ranking dos clientes com maior volume de compras.
+</p>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /ranking-clientes
+</pre>
+
+<h3>Exemplo de Retorno</h3>
+
+<pre>
+[
+   {
+      "cliente":"João Silva",
+      "total_compras":3500
+   }
+]
+</pre>
+
+<h3>Objetivos do Exercício</h3>
+
+<ul>
+<li>Consultar dados do MongoDB.</li>
+<li>Realizar agregações.</li>
+<li>Produzir respostas em JSON.</li>
+<li>Aplicar conceitos de integração de dados.</li>
+</ul>
+
+<hr>
+
+<h2>Resultado Esperado</h2>
+
+<p>
+Ao final da atividade o aluno será capaz de desenvolver APIs capazes de integrar
+dados provenientes de múltiplas fontes, consolidar informações corporativas e gerar
+relatórios para apoio à tomada de decisão.
+</p>
+
+</body>
+</html>

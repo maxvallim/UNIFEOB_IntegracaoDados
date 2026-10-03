@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Integração de Dados - Desenvolvimento das APIs</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:40px;
+    line-height:1.6;
+}
+
+h1{
+    color:#003366;
+}
+
+h2{
+    color:#005599;
+    border-bottom:1px solid #ccc;
+    padding-bottom:5px;
+}
+
+h3{
+    color:#006699;
+}
+
+pre{
+    background:#f4f4f4;
+    border:1px solid #ddd;
+    padding:10px;
+    overflow:auto;
+}
+
+code{
+    background:#f4f4f4;
+    padding:2px 4px;
+}
+
+.bloco{
+    background:#f8f8f8;
+    border-left:5px solid #005599;
+    padding:15px;
+    margin:15px 0;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Integração de Dados - Desenvolvimento das APIs</h1>
+
+<p>
+Após a configuração dos bancos de dados SQLite, PostgreSQL, Firebase Realtime Database e MongoDB,
+iniciaremos o desenvolvimento das APIs responsáveis pela consulta, integração e persistência das informações.
+</p>
+
+<hr>
+
+<h2>Estrutura do Projeto</h2>
+
+<pre>
+integracaodados/
+
+├── api_cliente.py
+├── api_compras.py
+├── api_financeiro.py
+├── api_consolidar.py
+├── api_consolidados.py
+├── api_exportar.py
+
+├── clientes.db
+
+├── firebase-key.json
+
+├── startall.bat
+
+└── requirements.txt
+</pre>
+
+<hr>
+
+<h2>Instalação das Bibliotecas</h2>
+
+<p>
+Criar o arquivo <strong>requirements.txt</strong>:
+</p>
+
+<pre>
+flask
+psycopg2-binary
+firebase-admin
+pymongo
+pandas
+openpyxl
+requests
+</pre>
+
+<p>
+Instalar as dependências:
+</p>
+
+<pre>
+pip install -r requirements.txt
+</pre>
+
+<hr>
+
+<h2>API 1 - Consulta de Clientes (SQLite)</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_cliente.py<br>
+<strong>Porta:</strong> 5001<br>
+<strong>Objetivo:</strong> Consultar os dados cadastrais do cliente no SQLite.
+<strong>Dica:</strong> O Banco deve estar na pasta (clientes.db).
+
+</div>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /cliente/1
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+import sqlite3
+
+app = Flask(__name__)
+
+@app.route('/cliente/&lt;int:codigo&gt;')
+def cliente(codigo):
+
+    con = sqlite3.connect("clientes.db")
+    con.row_factory = sqlite3.Row
+
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT *
+        FROM clientes
+        WHERE codigo = ?
+    """, (codigo,))
+
+    registro = cur.fetchone()
+
+    con.close()
+
+    if not registro:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
+
+    return jsonify(dict(registro))
+
+if __name__ == '__main__':
+    app.run(port=5001, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5001/cliente/1
+</pre>
+
+<hr>
+
+<h2>API 2 - Consulta de Compras (PostgreSQL)</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_compras.py<br>
+<strong>Porta:</strong> 5002<br>
+<strong>Objetivo:</strong> Consultar o histórico de compras do cliente.<br>
+<strong>Dica 1:</strong> Instalar o driver PostgreSQL (pip install psycopg2-binary).<br>
+<strong>Dica 2:</strong> Ache o 'pulo do gato' - conexão com o PostgreSQL Neon.<br>
+con = psycopg2.connect(<br>
+host="pega lá no Neon - Connect to your branch",<br>
+database="neondb",<br>
+user="neondb_owner",<br>
+password="SUA_SENHA",<br>
+port=5432,<br>
+sslmode="require"<br>
+)<br>
+
+ 
+</div>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /compras/1
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+import psycopg2
+
+app = Flask(__name__)
+
+@app.route('/compras/&lt;int:cliente&gt;')
+def compras(cliente):
+
+    con = psycopg2.connect(
+        host="localhost",
+        database="integracao",
+        user="postgres",
+        password="123456"
+    )
+
+    cur = con.cursor()
+
+    cur.execute("""
+        SELECT
+            data_compra,
+            valor
+        FROM compras
+        WHERE codigo_cliente = %s
+    """, (cliente,))
+
+    registros = cur.fetchall()
+
+    con.close()
+
+    resultado = []
+
+    for item in registros:
+        resultado.append({
+            "data": item[0].strftime("%Y-%m-%d"),
+            "valor": float(item[1])
+        })
+
+    return jsonify(resultado)
+
+if __name__ == '__main__':
+    app.run(port=5002, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5002/compras/1
+</pre>
+
+<hr>
+
+<h2>API 3 - Consulta Financeira (Firebase)</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_financeiro.py<br>
+<strong>Porta:</strong> 5003<br>
+<strong>Objetivo:</strong> Consultar informações financeiras do Firebase.<br>
+<strong>Dica:</strong> Ajustar a conexão.Baixar arquivo "firebase-key.json".<br>
+
+</div>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /financeiro/1
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+import firebase_admin
+
+from firebase_admin import credentials
+from firebase_admin import db
+
+cred = credentials.Certificate(
+    "firebase-key.json"
+)
+
+firebase_admin.initialize_app(
+    cred,
+    {
+        "databaseURL":
+        "https://SEU-PROJETO.firebaseio.com/"
+    }
+)
+
+app = Flask(__name__)
+
+@app.route('/financeiro/&lt;codigo&gt;')
+def financeiro(codigo):
+
+    ref = db.reference("/")
+
+    dados = ref.child(codigo).get()
+
+    if not dados:
+        return jsonify(
+            {"erro": "Cliente não encontrado"}
+        ), 404
+
+    return jsonify(dados)
+
+if __name__ == '__main__':
+    app.run(port=5003, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5003/financeiro/1
+</pre>
+
+<hr>
+
+<h2>API 4 - Consolidação dos Dados</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_consolidar.py<br>
+<strong>Porta:</strong> 5004<br>
+<strong>Objetivo:</strong> Integrar os dados provenientes do SQLite, PostgreSQL e Firebase e armazená-los no MongoDB.
+
+</div>
+
+<h3>Fluxo</h3>
+
+<pre>
+Cliente
+   ↓
+SQLite
+   ↓
+PostgreSQL
+   ↓
+Firebase
+   ↓
+MongoDB
+</pre>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /consolidar/1
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+import requests
+
+from pymongo import MongoClient
+
+app = Flask(__name__)
+
+mongo = MongoClient(
+    "mongodb://localhost:27017"
+)
+
+db = mongo["integracao_dados"]
+
+colecao = db["cliente_consolidado"]
+
+@app.route('/consolidar/&lt;codigo&gt;')
+def consolidar(codigo):
+
+    cliente = requests.get(
+        f'http://localhost:5001/cliente/{codigo}'
+    ).json()
+
+    compras = requests.get(
+        f'http://localhost:5002/compras/{codigo}'
+    ).json()
+
+    financeiro = requests.get(
+        f'http://localhost:5003/financeiro/{codigo}'
+    ).json()
+
+    documento = {
+        "cliente": cliente,
+        "compras": compras,
+        "financeiro": financeiro
+    }
+
+    colecao.insert_one(documento)
+
+    return jsonify({
+        "status": "sucesso",
+        "cliente": codigo
+    })
+
+if __name__ == '__main__':
+    app.run(port=5004, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5004/consolidar/1
+</pre>
+
+<hr>
+
+<h2>API 5 - Consulta dos Dados Consolidados</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_consolidados.py<br>
+<strong>Porta:</strong> 5005<br>
+<strong>Objetivo:</strong> Consultar os documentos gravados no MongoDB.
+
+</div>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /consolidados
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+from pymongo import MongoClient
+
+app = Flask(__name__)
+
+mongo = MongoClient(
+    "mongodb://localhost:27017"
+)
+
+db = mongo["integracao_dados"]
+
+colecao = db["cliente_consolidado"]
+
+@app.route('/consolidados')
+def consolidados():
+
+    lista = []
+
+    for doc in colecao.find():
+
+        doc["_id"] = str(doc["_id"])
+
+        lista.append(doc)
+
+    return jsonify(lista)
+
+if __name__ == '__main__':
+    app.run(port=5005, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5005/consolidados
+</pre>
+
+<hr>
+
+<h2>API 6 - Exportação para Excel</h2>
+
+<div class="bloco">
+
+<strong>Arquivo:</strong> api_exportar.py<br>
+<strong>Porta:</strong> 5006<br>
+<strong>Objetivo:</strong> Exportar os dados consolidados para uma planilha Excel.
+
+</div>
+
+<h3>Endpoint</h3>
+
+<pre>
+GET /exportar
+</pre>
+
+<h3>Código</h3>
+
+<pre>
+from flask import Flask, jsonify
+from pymongo import MongoClient
+import pandas as pd
+
+app = Flask(__name__)
+
+mongo = MongoClient(
+    "mongodb://localhost:27017"
+)
+
+db = mongo["integracao_dados"]
+
+colecao = db["cliente_consolidado"]
+
+@app.route('/exportar')
+def exportar():
+
+    registros = []
+
+    for doc in colecao.find():
+
+        registros.append({
+            "codigo":
+                doc["cliente"]["codigo"],
+
+            "nome":
+                doc["cliente"]["nome"],
+
+            "cidade":
+                doc["cliente"]["cidade"],
+
+            "limite":
+                doc["financeiro"]["limite"],
+
+            "saldo":
+                doc["financeiro"]["saldo"]
+        })
+
+    df = pd.DataFrame(registros)
+
+    df.to_excel(
+        "clientes_consolidados.xlsx",
+        index=False
+    )
+
+    return jsonify({
+        "arquivo":
+        "clientes_consolidados.xlsx"
+    })
+
+if __name__ == '__main__':
+    app.run(port=5006, debug=True)
+</pre>
+
+<h3>Teste</h3>
+
+<pre>
+http://localhost:5006/exportar
+</pre>
+
+<hr>
+
+<h2>Sequência Recomendada de Execução</h2>
+
+<ol>
+<li>Iniciar a API de Clientes (SQLite).</li>
+<li>Iniciar a API de Compras (PostgreSQL).</li>
+<li>Iniciar a API Financeira (Firebase).</li>
+<li>Validar os endpoints individualmente.</li>
+<li>Iniciar a API de Consolidação.</li>
+<li>Gravar o cliente consolidado no MongoDB.</li>
+<li>Consultar os dados consolidados.</li>
+<li>Exportar os dados para Excel.</li>
+</ol>
+
+<hr>
+
+<h2>Resultado Esperado</h2>
+
+<p>
+Ao final da atividade será possível integrar informações oriundas de diferentes fontes de dados,
+consolidá-las em um banco NoSQL e gerar relatórios em Excel utilizando APIs REST desenvolvidas em Python.
+</p>
+
+</body>
+</html>
