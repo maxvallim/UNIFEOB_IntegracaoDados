@@ -1,0 +1,388 @@
+Fase 1 - Importação
+Tabela Importação
+
+CREATE TABLE importacao (
+    id SERIAL PRIMARY KEY,
+    data_importacao TIMESTAMP NOT NULL,
+    nome_arquivo VARCHAR(255),
+    banco VARCHAR(100),
+    agencia VARCHAR(30),
+    conta VARCHAR(50),
+    data_inicial DATE,
+    data_final DATE
+);
+
+Tabela Movimento
+CREATE TABLE movimento (
+    id SERIAL PRIMARY KEY,
+    importacao_id INTEGER NOT NULL,
+    fitid VARCHAR(100),
+    tipo VARCHAR(20),
+    data_movimento DATE,
+    valor NUMERIC(15,2),
+    documento VARCHAR(100),
+    historico VARCHAR(255),
+    complemento TEXT,
+    processado BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (importacao_id)
+    REFERENCES importacao(id)
+);
+
+
+Por que essas duas tabelas?
+Porque o OFX possui:
+1 arquivo
+     ↓
+N movimentações
+
+Exemplo:
+Importação 15
+     │
+     ├─ PIX
+     ├─ Energia
+     ├─ TED
+     ├─ Aplicação
+     └─ Cheque
+	 
+	 
+Fase 2 - Backend Python
+FastAPI
+SQLAlchemy
+psycopg2
+ofxparse
+
+Primeiro Endpoint
+POST /importacao/ofx
+recebe arquivo.ofx
+
+Estrutura backend
+ofx-contabil-api/
+├── app/
+│   ├── main.py
+│   │
+│   ├── api/
+│   │   └── ofx.py
+│   │
+│   ├── models/
+│   │   ├── importacao.py
+│   │   └── movimento.py
+│   │
+│   ├── services/
+│   │   └── ofx_service.py
+│   │
+│   ├── database/
+│   │   └── database.py
+│   │
+│   └── schemas/
+│       └── movimento_schema.py
+│
+├── uploads/
+│
+├── requirements.txt
+│
+└── .env
+
+Criar o ambiente - criando agora
+mkdir ofx-contabil-api
+cd ofx-contabil-api
+
+Criar ambiente virtual
+python -m venv venv
+
+
+
+Ativar
+
+Windows
+venv\Scripts\activate
+
+Linux/Mac
+source venv/bin/activate
+
+
+Requirements.txt
+pip install fastapi
+pip install uvicorn
+pip install sqlalchemy
+pip install psycopg2-binary
+pip install python-multipart
+pip install python-dotenv
+pip install ofxparse
+pip install python-dotenv
+pip install python-multipart
+
+Gerar:
+pip freeze > requirements.txt
+
+
+TESTE
+uvicorn app.main:app --reload
+
+http://localhost:8000/ofx/teste
+
+http://localhost:8000/docs
+
+
+
+----------------------------------------------------------
+
+
+Passo 1 - Criar a pasta models
+
+Dentro de app:
+
+Plain Text
+app
+│
+├── api
+├── database
+├── models
+│
+└── main.py
+
+Crie:
+
+Plain Text
+app/models
+Passo 2 - Criar base.py
+
+Arquivo:
+
+Plain Text
+app/models/base.py
+
+Conteúdo Python
+
+from sqlalchemy.orm import declarative_base
+Base = declarative_base()
+
+Essa classe será herdada por todos os Models.
+
+Passo 3 - Criar importacao.py
+
+app/models/importacao.py
+
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Date
+from sqlalchemy import DateTime
+ 
+from app.models.base import Base
+ 
+class Importacao(Base):
+ 
+__tablename__ = "importacao"
+ 
+id = Column(Integer, primary_key=True)
+ 
+data_importacao = Column(DateTime)
+ 
+nome_arquivo = Column(String(255))
+ 
+banco = Column(String(100))
+ 
+agencia = Column(String(30))
+ 
+conta = Column(String(50))
+ 
+data_inicial = Column(Date)
+ 
+data_final = Column(Date)
+``
+Passo 4 - Criar movimento.py
+
+Arquivo:
+
+Plain Text
+app/models/movimento.py
+Python
+from sqlalchemy import Column
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import Date
+from sqlalchemy import Numeric
+from sqlalchemy import Boolean
+from sqlalchemy import ForeignKey
+ 
+from app.models.base import Base
+ 
+class Movimento(Base):
+ 
+	__tablename__ = "movimento"
+	 
+	id = Column(Integer, primary_key=True)
+	 
+	importacao_id = Column(
+	Integer,
+	ForeignKey("importacao.id")
+	)
+	 
+	fitid = Column(String(100))
+	 
+	tipo = Column(String(20))
+	 
+	data_movimento = Column(Date)
+	 
+	valor = Column(Numeric(15, 2))
+	 
+	documento = Column(String(100))
+	 
+	historico = Column(String(255))
+	 
+	complemento = Column(String)
+ 
+processado = Column(Boolean, default=False)
+
+
+
+
+
+
+Passo 5 - Estrutura esperada
+
+Ao final deverá ficar assim:
+
+Plain Text
+app
+│
+├── api
+│ ├── ofx.py
+│ └── database.py
+│
+├── database
+│ └── database.py
+│
+├── models
+│ ├── base.py
+│ ├── importacao.py
+│ └── movimento.py
+│
+└── main.py
+
+
+
+Vamos alterar o main.py para:
+
+Base.metadata.create_all(bind=engine)
+
+
+e fazer o SQLAlchemy criar automaticamente as tabelas no PostgreSQL.
+
+Fluxo:
+
+Plain Text
+Model Importacao
++
+Model Movimento
++
+PostgreSQL
+↓
+create_all()
+↓
+Tabelas criadas automaticamente
+
+Ou seja, na próxima etapa você vai rodar:
+
+Shell
+uvicorn app.main:app --reload
+
+e verificar no PostgreSQL se apareceram:
+
+SQL
+importacao
+movimento
+
+Sem executar nenhum CREATE TABLE.
+
+
+
+Próxima aula
+
+Agora começa a parte mais divertida:
+
+Endpoint de Upload
+
+Arquivo:
+
+Plain Text
+app/api/ofx.py
+``
+
+Criar:
+
+Python
+from fastapi import UploadFile
+from fastapi import File
+
+e uma rota:
+
+Python
+@router.post("/importar")
+async def importar_ofx(
+file: UploadFile = File(...)
+):
+return {
+"arquivo": file.filename
+}
+Teste
+
+Swagger:
+
+Plain Text
+POST /ofx/importar
+
+Selecionar:
+
+Plain Text
+extrato.ofx
+
+Retorno:
+
+JSON
+{
+"arquivo": "extrato.ofx"
+}
+Depois
+
+Vamos implementar:
+
+Python
+from ofxparse import OfxParser
+
+Fluxo:
+
+Plain Text
+Receber OFX
+↓
+Ler OFX
+↓
+Criar registro Importacao
+↓
+Criar registros Movimento
+↓
+Salvar PostgreSQL
+Situação atual do projeto
+Plain Text
+Frontend
+❌ ainda não iniciado
+ 
+Backend
+✅ funcionando
+ 
+Banco
+✅ funcionando
+ 
+ORM
+✅ funcionando
+ 
+Swagger
+✅ funcionando
+ 
+Upload OFX
+🔜 próxima etapa
+
+Sinceramente, para uma única aula vocês avançaram bastante. Agora vocês já estão na fase de desenvolvimento do sistema e não mais na fase de configuração do ambiente. 🚀
+
+Próximo passo: criar o endpoint POST /ofx/importar e testar o envio do primeiro arquivo OFX pelo Swagger.
+

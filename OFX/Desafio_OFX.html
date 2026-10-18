@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitura de Arquivos OFX com Python</title>
+
+<style>
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+}
+
+.container{
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.10);
+}
+
+h1{
+    color: #000000;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h2{
+    color: #000000;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 5px;
+    margin-top: 35px;
+}
+
+pre{
+    background: #1e1e1e;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+code{
+    font-family: Consolas, monospace;
+}
+
+.destaque{
+    background-color: #f5f5f5;
+    border-left: 5px solid #000000;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.desafio{
+    background-color: #fafafa;
+    border-left: 5px solid #555555;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+ul li{
+    margin-bottom: 5px;
+}
+
+footer{
+    text-align: center;
+    margin-top: 30px;
+    color: #555;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Leitura de Arquivos OFX com Python</h1>
+
+<p>
+Nesta atividade desenvolveremos uma aplicação simples capaz de realizar
+a leitura de arquivos bancários no formato OFX (Open Financial Exchange).
+Esse formato é amplamente utilizado por instituições financeiras para
+exportação de extratos bancários.
+</p>
+
+<p>
+Ao final desta aula o aluno será capaz de importar um arquivo OFX,
+percorrer suas movimentações financeiras e exibir os dados utilizando Python.
+</p>
+
+<h2>Objetivos da Aula</h2>
+
+<ul>
+<li>Instalar bibliotecas externas com pip;</li>
+<li>Ler arquivos OFX;</li>
+<li>Percorrer coleções de objetos;</li>
+<li>Exibir movimentações financeiras;</li>
+<li>Aplicar conceitos de processamento de dados;</li>
+<li>Preparar a base para futuras integrações com banco de dados.</li>
+</ul>
+
+<h2>Estrutura do Projeto</h2>
+
+<pre>
+ProjetoOFX
+│
+├── main.py
+├── extrato.ofx
+└── venv (opcional)
+</pre>
+
+<h2>Passo 1 - Criando o Projeto</h2>
+
+<p>
+Crie uma pasta denominada:
+</p>
+
+<pre>
+ProjetoOFX
+</pre>
+
+<p>
+Dentro dessa pasta crie o arquivo:
+</p>
+
+<pre>
+main.py
+</pre>
+
+<h2>Passo 2 - Criando o Ambiente Virtual (Opcional)</h2>
+
+<p>
+Abra o terminal do Visual Studio Code e execute:
+</p>
+
+<pre>
+python -m venv venv
+</pre>
+
+<p><strong>Ativação no Windows:</strong></p>
+
+<pre>
+venv\Scripts\activate
+</pre>
+
+<h2>Passo 3 - Instalando a Biblioteca</h2>
+
+<p>
+Instale a biblioteca responsável pela leitura dos arquivos OFX:
+</p>
+
+<pre>
+pip install ofxparse
+</pre>
+
+<h2>Passo 4 - Obtendo um Arquivo OFX</h2>
+
+<p>
+Utilize um arquivo OFX exportado de uma instituição financeira ou o arquivo disponibilizado pelo professor.
+</p>
+
+<p>
+Salve-o na pasta do projeto com o nome:
+</p>
+
+<pre>
+extrato.ofx
+</pre>
+
+<h2>Passo 5 - Desenvolvendo o Programa</h2>
+
+<p>
+Digite o código abaixo no arquivo <strong>main.py</strong>:
+</p>
+
+<pre>
+from ofxparse import OfxParser
+
+with open("extrato.ofx", "rb") as arquivo:
+    ofx = OfxParser.parse(arquivo)
+
+for transacao in ofx.account.statement.transactions:
+
+    print(
+        transacao.date,
+        transacao.amount,
+        transacao.memo
+    )
+</pre>
+
+<h2>Passo 6 - Executando o Programa</h2>
+
+<p>
+No terminal execute:
+</p>
+
+<pre>
+python main.py
+</pre>
+
+<p>
+Saída esperada:
+</p>
+
+<pre>
+2026-01-05 1500.00 PIX CLIENTE
+2026-01-06 -250.00 CONTA DE ENERGIA
+2026-01-07 -75.50 INTERNET
+</pre>
+
+<h2>Melhorando a Apresentação dos Dados</h2>
+
+<p>
+Podemos tornar a saída mais amigável ao usuário.
+</p>
+
+<pre>
+from ofxparse import OfxParser
+
+with open("extrato.ofx", "rb") as arquivo:
+    ofx = OfxParser.parse(arquivo)
+
+print("EXTRATO BANCÁRIO")
+
+for t in ofx.account.statement.transactions:
+
+    print(f"""
+Data      : {t.date.strftime('%d/%m/%Y')}
+Valor     : R$ {t.amount:.2f}
+Descrição : {t.memo}
+--------------------------------------
+""")
+</pre>
+
+<h2>Atividade Prática</h2>
+
+<p>
+Desenvolva uma aplicação que apresente:
+</p>
+
+<ul>
+<li>Data da movimentação;</li>
+<li>Valor da transação;</li>
+<li>Descrição da operação;</li>
+<li>Quantidade total de movimentações encontradas.</li>
+</ul>
+
+<p>
+Ao final da execução, exiba também:
+</p>
+
+<ul>
+<li>Total de entradas;</li>
+<li>Total de saídas;</li>
+<li>Saldo calculado.</li>
+</ul>
+
+<h2>Exemplo de Lógica para Totais</h2>
+
+<pre>
+entradas = 0
+saidas = 0
+
+for t in ofx.account.statement.transactions:
+
+    if t.amount > 0:
+        entradas += t.amount
+    else:
+        saidas += t.amount
+
+saldo = entradas + saidas
+
+print(f"Entradas: R$ {entradas:.2f}")
+print(f"Saídas: R$ {saidas:.2f}")
+print(f"Saldo: R$ {saldo:.2f}")
+</pre>
+
+<div class="desafio">
+
+<h2>Desafio Extra - PostgreSQL</h2>
+
+<p>
+Após realizar a leitura do arquivo OFX, desenvolva uma solução capaz de armazenar automaticamente as movimentações bancárias em um banco PostgreSQL.
+</p>
+
+<p>
+Crie a tabela abaixo:
+</p>
+
+<pre>
+CREATE TABLE movimentacoes (
+    id SERIAL PRIMARY KEY,
+    data_movimentacao DATE,
+    valor NUMERIC(15,2),
+    descricao VARCHAR(255)
+);
+</pre>
+
+<p>
+Requisitos do desafio:
+</p>
+
+<ul>
+<li>Instalar a biblioteca psycopg2;</li>
+<li>Criar a conexão com PostgreSQL;</li>
+<li>Ler as movimentações do arquivo OFX;</li>
+<li>Inserir cada transação na tabela;</li>
+<li>Validar os registros utilizando o DBeaver.</li>
+</ul>
+
+<p>
+Desafio bônus: implementar uma validação que impeça a gravação de transações duplicadas.
+</p>
+
+</div>
+
+<div class="destaque">
+
+<h2>Conceito Aplicado</h2>
+
+<p>
+Esta atividade representa uma implementação simplificada de um processo
+ETL (Extração, Transformação e Carga de Dados), muito utilizado em
+escritórios contábeis, instituições financeiras e sistemas de integração.
+</p>
+
+</div>
+
+<h2>Entrega da Atividade - link do Github</h2>
+
+</div>
+
+</body>
+</html>
