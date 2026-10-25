@@ -1,0 +1,121 @@
+<h2>Desafio Integrador Final</h2>
+
+<div class="highlight">
+Neste desafio os alunos deverão utilizar diversos conceitos aprendidos ao longo
+da aula para construir um fluxo de integração corporativa completo.
+</div>
+
+<div class="card">
+
+<h3>Objetivo</h3>
+
+<p>
+Construir um processo ETL completo consolidando informações de múltiplas fontes.
+</p>
+
+<h3>Fontes de Dados</h3>
+
+<ul>
+<li>Clientes (MySQL)</li>
+<li>Pedidos (PostgreSQL)</li>
+<li>Produtos (Excel)</li>
+</ul>
+
+<h3>Transformações</h3>
+
+<ul>
+<li>Leitura das três fontes</li>
+<li>Join entre as tabelas</li>
+<li>Filtragem do período atual</li>
+<li>Cálculo do faturamento por estado</li>
+<li>Classificação dos resultados</li>
+<li>Agrupamento por região</li>
+</ul>
+
+<h3>Saídas</h3>
+
+<ul>
+<li>Arquivo Excel consolidado</li>
+<li>Relatório executivo em Word</li>
+<li>Envio automático por e-mail</li>
+</ul>
+
+</div>
+
+<div class="card">
+
+<h3>Fluxo Conceitual</h3>
+
+<pre>
+
+          MySQL (Clientes)
+                   │
+                   ▼
+              DB Reader
+                   │
+                   │
+                   ▼
+              Joiner
+                   ▲
+                   │
+          PostgreSQL (Pedidos)
+                   │
+                   ▼
+              DB Reader
+                   │
+                   │
+                   ▼
+          Excel (Produtos)
+                   │
+                   ▼
+              Excel Reader
+                   │
+                   ▼
+               Joiner
+                   │
+                   ▼
+             Row Filter
+                   │
+                   ▼
+              GroupBy
+                   │
+                   ▼
+               Sorter
+                   │
+         ┌─────────┼─────────┐
+         │         │         │
+         ▼         ▼         ▼
+     Excel      Word      E-mail
+     Writer   Generator   Sender
+
+</pre>
+
+</div>
+
+<div class="exercise">
+
+<h3>Critérios de Avaliação</h3>
+
+<ul>
+<li>Conectividade das fontes</li>
+<li>Qualidade das transformações</li>
+<li>Organização do workflow</li>
+<li>Documentação dos nós</li>
+<li>Qualidade do relatório gerado</li>
+<li>Automação completa do processo</li>
+</ul>
+
+</div>
+
+<div class="highlight">
+
+<strong>Missão Final:</strong>
+
+Imagine que você foi contratado como Analista de Dados de uma empresa nacional.
+Seu desafio é consolidar informações espalhadas em diferentes sistemas,
+transformar esses dados em informação útil e entregar automaticamente os resultados
+para a diretoria.
+
+Esse é exatamente o tipo de problema que o KNIME resolve diariamente nas empresas.
+
+</div>

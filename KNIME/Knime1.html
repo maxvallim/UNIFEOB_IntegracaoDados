@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETL com KNIME Analytics Platform</title>
+
+<style>
+    body{
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:#ffffff;
+        color:#111111;
+        line-height:1.7;
+        margin:0;
+        padding:0;
+    }
+
+    .container{
+        width:90%;
+        max-width:1200px;
+        margin:auto;
+        padding:40px;
+    }
+
+    h1{
+        font-size:42px;
+        border-bottom:4px solid #000;
+        padding-bottom:15px;
+        margin-bottom:30px;
+    }
+
+    h2{
+        margin-top:50px;
+        border-left:5px solid #000;
+        padding-left:15px;
+    }
+
+    h3{
+        margin-top:30px;
+    }
+
+    .card{
+        border:1px solid #d9d9d9;
+        padding:25px;
+        border-radius:8px;
+        margin-top:20px;
+        background:#fafafa;
+    }
+
+    .highlight{
+        background:#f5f5f5;
+        border-left:5px solid #000;
+        padding:20px;
+        margin:20px 0;
+    }
+
+    .exercise{
+        border:1px solid #d0d0d0;
+        border-radius:8px;
+        padding:20px;
+        margin:20px 0;
+        background:#fcfcfc;
+    }
+
+    code{
+        background:#f1f1f1;
+        padding:2px 5px;
+        border-radius:3px;
+    }
+
+    ul li{
+        margin-bottom:8px;
+    }
+
+    table{
+        border-collapse:collapse;
+        width:100%;
+        margin-top:15px;
+    }
+
+    table, th, td{
+        border:1px solid #d7d7d7;
+    }
+
+    th{
+        background:#f4f4f4;
+    }
+
+    th,td{
+        padding:10px;
+    }
+
+    .footer{
+        margin-top:60px;
+        text-align:center;
+        color:#555;
+        font-size:14px;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>ETL com KNIME Analytics Platform</h1>
+
+<div class="highlight">
+<strong>Objetivo da Aula:</strong><br>
+Entender os conceitos de ETL (Extract, Transform and Load) utilizando o KNIME Analytics Platform e construir fluxos de integração de dados com diferentes fontes corporativas.
+</div>
+
+<h2>O que é o KNIME?</h2>
+
+<p>
+O KNIME Analytics Platform é uma plataforma visual de integração, preparação,
+transformação, análise e automação de dados.
+</p>
+
+<p>
+Seu principal diferencial é permitir a criação de processos utilizando uma interface gráfica baseada em nós (nodes), eliminando grande parte da necessidade de programação.
+</p>
+
+<div class="card">
+<h3>Principais Possibilidades</h3>
+
+<ul>
+<li>Integração de dados corporativos</li>
+<li>Processos ETL e ELT</li>
+<li>Data Warehouse</li>
+<li>Business Intelligence</li>
+<li>Machine Learning</li>
+<li>Automação de relatórios</li>
+<li>Tratamento de planilhas Excel</li>
+<li>Integração com bancos relacionais</li>
+<li>Integração com bancos NoSQL</li>
+<li>Extração de dados de APIs REST</li>
+<li>Leitura e geração de documentos Word e PDF</li>
+<li>Envio automatizado de e-mails</li>
+<li>Processamento de grandes volumes de dados</li>
+</ul>
+
+</div>
+
+<h2>O Conceito de ETL</h2>
+
+<div class="card">
+
+<h3>Extract (Extração)</h3>
+<p>Leitura dos dados a partir de uma origem.</p>
+
+<h3>Transform (Transformação)</h3>
+<p>Limpeza, enriquecimento, validação e tratamento das informações.</p>
+
+<h3>Load (Carga)</h3>
+<p>Gravação dos dados processados em um destino.</p>
+
+</div>
+
+<h2>Primeiro Workflow</h2>
+
+<div class="card">
+
+<h3>Fluxo:</h3>
+
+<pre>
+Excel Reader
+      ↓
+Row Filter
+      ↓
+Excel Writer
+</pre>
+
+</div>
+
+<h2>Excel Reader (Extract)</h2>
+
+<div class="card">
+
+<p><strong>Objetivo:</strong> Ler dados de uma planilha Excel.</p>
+
+<ol>
+<li>Inserir o nó Excel Reader.</li>
+<li>Selecionar o arquivo Excel.</li>
+<li>Visualizar colunas e tipos de dados.</li>
+<li>Executar o nó.</li>
+<li>Abrir a tabela de saída.</li>
+</ol>
+
+</div>
+
+<h2>Row Filter (Transform)</h2>
+
+<div class="card">
+
+<p><strong>Objetivo:</strong> Filtrar registros.</p>
+
+<h3>Exemplos:</h3>
+
+<ul>
+<li>Clientes do estado SP</li>
+<li>Vendas acima de R$ 1.000</li>
+<li>Excluir registros nulos</li>
+<li>Filtrar produtos ativos</li>
+</ul>
+
+</div>
+
+<h2>Excel Writer (Load)</h2>
+
+<div class="card">
+
+<p><strong>Objetivo:</strong> Gravar o resultado final em um novo arquivo Excel.</p>
+
+<ol>
+<li>Configurar o caminho do arquivo.</li>
+<li>Definir substituição ou criação.</li>
+<li>Executar o nó.</li>
+</ol>
+
+</div>
+
+<h2>Exercício Básico</h2>
+
+<div class="exercise">
+
+<p>Considere a tabela:</p>
+
+<table>
+<tr>
+<th>Cliente</th>
+<th>Cidade</th>
+<th>Estado</th>
+<th>Valor</th>
+</tr>
+
+<tr>
+<td>João</td>
+<td>Campinas</td>
+<td>SP</td>
+<td>1500</td>
+</tr>
+
+<tr>
+<td>Maria</td>
+<td>Belo Horizonte</td>
+<td>MG</td>
+<td>800</td>
+</tr>
+
+<tr>
+<td>Carlos</td>
+<td>Ribeirão Preto</td>
+<td>SP</td>
+<td>2200</td>
+</tr>
+
+<tr>
+<td>Ana</td>
+<td>Curitiba</td>
+<td>PR</td>
+<td>500</td>
+</tr>
+
+</table>
+
+<h3>Atividade</h3>
+
+<ul>
+<li>Ler a planilha</li>
+<li>Filtrar apenas SP</li>
+<li>Salvar como Clientes_SP.xlsx</li>
+</ul>
+
+</div>
+
+<h2>Relação de Exercícios Práticos</h2>
+
+<div class="exercise">
+
+<h3>Exercício 1 - MySQL</h3>
+
+<p>
+Conectar ao banco MySQL da empresa e extrair a tabela CLIENTES.
+</p>
+
+<ul>
+<li>MySQL Connector</li>
+<li>DB Table Selector</li>
+<li>DB Reader</li>
+<li>Excel Writer</li>
+</ul>
+
+<b>Objetivo:</b> Exportar os clientes ativos para Excel.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 2 - PostgreSQL</h3>
+
+<p>
+Ler a tabela PEDIDOS e calcular o total de vendas por estado.
+</p>
+
+<ul>
+<li>PostgreSQL Connector</li>
+<li>DB Reader</li>
+<li>GroupBy</li>
+<li>Excel Writer</li>
+</ul>
+
+<b>Objetivo:</b> Criar relatório consolidado.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 3 - MongoDB</h3>
+
+<p>
+Consumir uma coleção de pedidos armazenada em MongoDB.
+</p>
+
+<ul>
+<li>MongoDB Connector</li>
+<li>MongoDB Reader</li>
+<li>Column Filter</li>
+<li>JSON to Table</li>
+</ul>
+
+<b>Objetivo:</b> Transformar documentos JSON em tabela estruturada.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 4 - SQLite</h3>
+
+<p>
+Ler uma base local SQLite contendo informações de estoque.
+</p>
+
+<ul>
+<li>SQLite Connector</li>
+<li>DB Reader</li>
+<li>Row Filter</li>
+<li>Excel Writer</li>
+</ul>
+
+<b>Objetivo:</b> Exportar apenas produtos com estoque baixo.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 5 - Firebase</h3>
+
+<p>
+Consultar dados de uma coleção Firebase Firestore.
+</p>
+
+<ul>
+<li>REST API Consumer</li>
+<li>JSON Parser</li>
+<li>Table Creator</li>
+<li>Excel Writer</li>
+</ul>
+
+<b>Objetivo:</b> Gerar relatório dos usuários cadastrados.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 6 - DuckDB</h3>
+
+<p>
+Realizar análise analítica local utilizando DuckDB.
+</p>
+
+<ul>
+<li>DuckDB Connector</li>
+<li>DB Query Reader</li>
+<li>Sorter</li>
+<li>GroupBy</li>
+</ul>
+
+<b>Objetivo:</b> Calcular ranking de vendas.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 7 - Geração de Documento Word</h3>
+
+<p>
+Após consolidar os dados das vendas:
+</p>
+
+<ul>
+<li>Ler dados de Excel</li>
+<li>Criar resumo executivo</li>
+<li>Gerar arquivo Word automatizado</li>
+</ul>
+
+<b>Objetivo:</b> Produzir relatório gerencial automaticamente.
+</div>
+
+<div class="exercise">
+
+<h3>Exercício 8 - Envio Automático de E-mail</h3>
+
+<p>
+Após gerar um relatório:
+</p>
+
+<ul>
+<li>Ler resultado final</li>
+<li>Anexar relatório</li>
+<li>Enviar e-mail automaticamente</li>
+</ul>
+
+<b>Objetivo:</b> Automatizar distribuição de indicadores.
+</div>
+
+
+<h2>Conclusão</h2>
+
+<div class="highlight">
+O KNIME permite integrar praticamente qualquer fonte de dados do mercado utilizando uma abordagem visual, intuitiva e escalável. A ferramenta é amplamente utilizada em projetos de ETL, Analytics, Data Science, Machine Learning e Automação de Processos de Dados.
+</div>
+
+<div class="footer">
+Integração de Dados com KNIME Analytics Platform
+</div>
+
+</div>
+
+</body>
+</html>
